@@ -1,0 +1,20 @@
+ifndef::snippets[]
+:snippets: ../../../build/generated-snippets
+endif::[]
+= Application Name
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+
+[[resources-developer-find]]
+=== 조회 API
+
+==== HTTP request
+include::{snippets}/find-developer/path-parameters.adoc[]
+include::{snippets}/find-developer/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/find-developer/response-fields.adoc[]
+include::{snippets}/find-developer/response-body.adoc[]
+include::{snippets}/find-developer/http-response.adoc[]
