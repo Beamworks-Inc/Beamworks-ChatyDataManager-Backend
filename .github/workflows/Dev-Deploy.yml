@@ -13,6 +13,11 @@ on:
 
 permissions:
   contents: read
+# Database Setting
+env:
+  AWS_RDS_USER: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_RDS_PWD: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_RDS_ENDPOINT: ${{ secrets.AWS_ACCESS_KEY_ID }}
 
 jobs:
   build:
@@ -32,16 +37,26 @@ jobs:
       with:
         arguments: clean bootJar -Pprofile=prod
         
-    - name: Get Deploy Jar
-      run: mv ./build/libs/*.jar deploy.jar
+    - name: Get current time
+      uses: 1466587594/get-current-time@v2
+      id: time
+      with:
+        format: YYYY-MM-DDTHH-mm-ss 
+        utcOffset: "+09:00" 
+        
+    - name: Create Deployment Package
+      run: |
+        mkdir -p deploy
+        mv ./build/libs/*.jar deploy/application.jar
+        cd deploy && zip -r deploy.zip .
     
     - name: Deploy to Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v21
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        application_name: beamworks-platform-dev
-        environment_name: beamworks-platform-dev
-        version_label: 1
-        region: ap-northeast-1
-        deployment_package: deploy.jar
+        application_name: beamworks-platform-server-dev
+        environment_name: Beamworksplatformserverdev-env
+        version_label: ${{steps.time.outputs.formattedTime}}
+        region: ap-northeast-2
+        deployment_package: deploy/deploy.zip
