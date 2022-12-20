@@ -1,0 +1,9 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:mysql://${AWS_RDS_USER}:${AWS_RDS_PWD}!@${${AWS_RDS_ENDPOINT}/main?createDatabaseIfNotExist=true
+server:
+  port: 5000
+
