@@ -31,6 +31,9 @@ jobs:
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
         arguments: clean bootJar -Pprofile=prod
+        
+    - name: Get Deploy Jar
+      run: mv ./build/libs/*.jar deploy.jar
     
     - name: Deploy to Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v21
@@ -41,4 +44,4 @@ jobs:
         environment_name: beamworks-platform-dev
         version_label: 1
         region: ap-northeast-1
-        deployment_package: ./build/libs/*.jar
+        deployment_package: deploy.jar
