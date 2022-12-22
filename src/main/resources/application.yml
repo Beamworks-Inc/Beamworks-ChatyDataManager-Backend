@@ -1,9 +1,32 @@
 spring:
   config:
     activate:
+      on-profile: local
+  datasource:
+    url: jdbc:mysql://${AWS_RDS_USER}:${AWS_RDS_PWD}!@${${AWS_RDS_ENDPOINT}/main?createDatabaseIfNotExist=true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+server:
+  port: 5000
+---
+spring:
+  config:
+    activate:
       on-profile: prod
   datasource:
     url: jdbc:mysql://${AWS_RDS_USER}:${AWS_RDS_PWD}!@${${AWS_RDS_ENDPOINT}/main?createDatabaseIfNotExist=true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
 server:
   port: 5000
 
