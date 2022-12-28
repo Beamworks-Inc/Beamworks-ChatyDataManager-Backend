@@ -28,21 +28,27 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
+
+    - name: Create Generated-Snippets Directory
+      run: mkdir -p /home/runner/work/Beamworks-Platform-Backend/Beamworks-Platform-Backend/build/generated-snippets
         
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
 
-    - name: Create Generated-Snippets Directory
-      run: mkdir -p /home/runner/work/Beamworks-Platform-Backend/Beamworks-Platform-Backend/build/generated-snippets
+    - name: Build with Gradle
+      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+      with:
+        arguments: build
     
-    - name: Build
-      run: ./gradlew build
-    
-    - name: Test
-      run: ./gradlew test
-      
+    - name: Test with Gradle
+      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+      with:
+        arguments: test
+
     - name: Create Test Coverage Report
-      run: ./gradlew jacocoTestReport
+        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        with:
+          arguments: jacocoTestReport
       
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3.1.1
