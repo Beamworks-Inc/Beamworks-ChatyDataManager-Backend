@@ -111,11 +111,11 @@ tasks {
     }
 
     build {
-        mkdir("$buildDir/generated-snippets")
         dependsOn("copyDocument")
     }
 
     asciidoctor {
+        mkdir("$buildDir/generated-snippets")
         dependsOn(test)
 
         attributes(
