@@ -48,7 +48,7 @@ class SecurityConfig {
 
     private fun HttpSecurity.setOAuth2Login(): HttpSecurity {
         oauth2Login{oauth2-> oauth2
-            .defaultSuccessUrl("/api",true)
+            .defaultSuccessUrl("/",true)
         }
         return this
     }
