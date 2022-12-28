@@ -98,6 +98,7 @@ tasks.jacocoTestCoverageVerification {
 }
 //Spring Rest Docs
 tasks {
+    mkdir("$buildDir/generated-snippets")
     val snippetsDir = file("$buildDir/generated-snippets")
 
     clean {
@@ -129,6 +130,7 @@ tasks {
 
     register<Copy>("copyDocument") {
         dependsOn(asciidoctor)
+
         destinationDir = file(".")
         from(asciidoctor.get().outputDir) {
             duplicatesStrategy=DuplicatesStrategy.INCLUDE
