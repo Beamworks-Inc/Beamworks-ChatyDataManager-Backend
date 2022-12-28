@@ -9,7 +9,7 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint
 
 @EnableWebSecurity
 class SecurityConfig {
-    val PUBLIC_URL= arrayOf("/login")
+    val PUBLIC_URL= arrayOf("/")
     val PRIVATE_URL= arrayOf("/api/**")
 
     @Bean
