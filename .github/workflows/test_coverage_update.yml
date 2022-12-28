@@ -31,6 +31,9 @@ jobs:
         
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
+
+    - name: Create Generated-Snippets Directory
+      run: mkdir -p build/generated-snippets
     
     - name: Build
       run: ./gradlew build
