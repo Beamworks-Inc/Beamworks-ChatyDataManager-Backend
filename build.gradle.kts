@@ -98,7 +98,6 @@ tasks.jacocoTestCoverageVerification {
 }
 //Spring Rest Docs
 tasks {
-    mkdir("$buildDir/generated-snippets")
     val snippetsDir = file("$buildDir/generated-snippets")
 
     clean {
@@ -112,6 +111,7 @@ tasks {
     }
 
     build {
+        mkdir("$buildDir/generated-snippets")
         dependsOn("copyDocument")
     }
 
