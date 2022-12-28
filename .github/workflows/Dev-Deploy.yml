@@ -18,6 +18,8 @@ env:
   AWS_RDS_USER: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_RDS_PWD: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_RDS_ENDPOINT: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+  GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
 
 jobs:
   build:
