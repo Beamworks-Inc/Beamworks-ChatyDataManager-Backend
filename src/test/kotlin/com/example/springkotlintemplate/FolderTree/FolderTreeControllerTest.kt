@@ -4,22 +4,15 @@ import com.google.gson.Gson
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.every
 import io.mockk.mockk
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.http.MediaType
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
-import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse
-import org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint
-import org.springframework.restdocs.payload.PayloadDocumentation.*
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.*
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 
-@AutoConfigureRestDocs(uriScheme = "https", uriHost = "localhost")
+
 class FolderTreeControllerTest: DescribeSpec({
     val mockService = mockk<FolderTreeService>()
-    val mockMvc: MockMvc = MockMvcBuilders.standaloneSetup(FolderTreeController()).build()
+    val mockMvc= MockMvcBuilders.standaloneSetup(FolderTreeController(mockService)).build()
     val URI="/api/folder"
     val mockFolderTree = FolderTree("root", listOf(
         FolderTree("child1", listOf(
@@ -28,231 +21,123 @@ class FolderTreeControllerTest: DescribeSpec({
         )),
         FolderTree("child2", listOf())
     ))
-
-    describe("FolderTreeController") {
+    describe("FolderTreeController") @WithMockUser{
         context("GET /api/folder") {
-            it("should return all folderTree") {
+            it("모든 폴더 트리 리스트를 반환해야한다.") {
                 every { mockService.findAll() } returns listOf(mockFolderTree)
-                mockMvc.perform(
-                    RestDocumentationRequestBuilders.get(URI)
-                )
-                    .andExpect {
-                        status().isOk
-                        content().contentType(MediaType.APPLICATION_JSON)
-                        content().json(Gson().toJson(mockFolderTree))
-                    }
-                    .andDo(MockMvcResultHandlers.print())
-                    .andDo(
-                        document(
-                            "find-folderTree",
-                            preprocessResponse(prettyPrint())
-                        )
-                    )
+                mockMvc.get(URI) {
+                    accept = MediaType.APPLICATION_JSON
+                }.andExpect {
+                    status { isOk() }
+                    content { contentType(MediaType.APPLICATION_JSON) }
+                    content { json(Gson().toJson(listOf(mockFolderTree))) }
+                }
             }
-            it("if empty, should return empty list") {
+            it("만약 폴더 트리 리스트가 없다면 빈 리스트를 반환해야한다.") {
                 every { mockService.findAll() } returns listOf()
-                mockMvc.perform(
-                    RestDocumentationRequestBuilders.get(URI)
-                )
-                    .andExpect {
-                        status().isOk
-                        content().contentType(MediaType.APPLICATION_JSON)
-                        content().json("[]")
-                    }
-                    .andDo(MockMvcResultHandlers.print())
-                    .andDo(
-                        document(
-                            "find-folderTree",
-                            preprocessResponse(prettyPrint()),
-                        )
-                    )
+                mockMvc.get(URI) {
+                    accept = MediaType.APPLICATION_JSON
+                }.andExpect {
+                    status { isOk() }
+                    content { contentType(MediaType.APPLICATION_JSON) }
+                    content { json("[]") }
+                }
             }
         }
         context("POST /api/folder") {
-            it("should return created folderTree") {
+            it("폴더 트리를 만들고 결과를 반환해야한다.") {
                 every { mockService.create(any()) } returns mockFolderTree
-                mockMvc.perform(
-                    RestDocumentationRequestBuilders.post(URI)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(Gson().toJson(mockFolderTree))
-                )
-                    .andExpect {
-                        status().isCreated
-                        content().contentType(MediaType.APPLICATION_JSON)
-                    }
-                    .andDo(MockMvcResultHandlers.print())
-                    .andDo(
-                        document(
-                            "create-folderTree",
-                            preprocessResponse(prettyPrint()),
-                            requestFields(
-                                fieldWithPath("name").description("folderTree name"),
-                                fieldWithPath("children").description("folderTree children, it also has name and children")
-                            ),
-                        )
-                    )
+                mockMvc.post(URI) {
+                    accept = MediaType.APPLICATION_JSON
+                    contentType = MediaType.APPLICATION_JSON
+                    content = Gson().toJson(mockFolderTree)
+                }.andExpect {
+                    status { isOk() }
+                    content { contentType(MediaType.APPLICATION_JSON) }
+                    content { json(Gson().toJson(mockFolderTree)) }
+                }
             }
-            it("if request format invalid, return 400 Response code") {
+            it("요청 형식이 폴더 트리 형식이 아닌 경우 400 에러와 형식이 잘못되었다는 메시지를 반환해야한다.") {
                 every { mockService.create(any()) } returns mockFolderTree
-                mockMvc.perform(
-                    RestDocumentationRequestBuilders.post(URI)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(Gson().toJson(mockFolderTree))
-                )
-                    .andExpect {
-                        status().isBadRequest
-                    }
-                    .andDo(MockMvcResultHandlers.print())
-                    .andDo(
-                        document(
-                            "create-folderTree",
-                            preprocessResponse(prettyPrint()),
-                            requestFields(
-                                fieldWithPath("name").description("folderTree name"),
-                                fieldWithPath("children").description("folderTree children, it also has name and children")
-                            ),
-                        )
-                    )
+                mockMvc.post(URI) {
+                    accept = MediaType.APPLICATION_JSON
+                    contentType = MediaType.APPLICATION_JSON
+                    content = Gson().toJson("not a folder tree")
+                }.andExpect {
+                    status { isBadRequest() }
+                    content { contentType(MediaType.APPLICATION_JSON) }
+                    content { json(Gson().toJson("요청 형식이 잘못되었습니다.")) }
+                }
             }
-            it("if creation failed, return 500 response code with error message") {
+            it("폴더 트리 생성을 실패하면, 500 에러와 메시지를 반환해야한다.") {
                 every { mockService.create(any()) } throws Exception("error")
-                mockMvc.perform(
-                    RestDocumentationRequestBuilders.post(URI)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(Gson().toJson(mockFolderTree))
-                )
-                    .andExpect {
-                        status().isInternalServerError
-                        content().contentType(MediaType.APPLICATION_JSON)
-                        content().json("{\"message\":\"error\"}")
-                    }
-                    .andDo(MockMvcResultHandlers.print())
-                    .andDo(
-                        document(
-                            "create-folderTree",
-                            preprocessResponse(prettyPrint()),
-                            requestFields(
-                                fieldWithPath("name").description("folderTree name"),
-                                fieldWithPath("children").description("folderTree children, it also has name and children")
-                            ),
-                            responseFields(
-                                fieldWithPath("message").description("server error message")
-                            )
-                        )
-                    )
-
+                mockMvc.post(URI) {
+                    accept = MediaType.APPLICATION_JSON
+                    contentType = MediaType.APPLICATION_JSON
+                    content = Gson().toJson(mockFolderTree)
+                }.andExpect {
+                    status { isInternalServerError() }
+                    content { contentType(MediaType.APPLICATION_JSON) }
+                    content { json(Gson().toJson(mapOf("message" to "error"))) }
+                }
             }
         }
         context("PUT /api/folder/{id}") {
-            it("should return updated folderTree") {
+            it("업데이트된 폴더 트리를 반환해야한다.") {
                 every { mockService.update(any(), any()) } returns mockFolderTree
-                mockMvc.perform(
-                    RestDocumentationRequestBuilders.put("$URI/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(Gson().toJson(mockFolderTree))
-                )
-                    .andExpect {
-                        status().isOk
-                    }
-                    .andDo(MockMvcResultHandlers.print())
-                    .andDo(
-                        document(
-                            "update-folderTree",
-                            preprocessResponse(prettyPrint()),
-                            requestFields(
-                                fieldWithPath("name").description("folderTree name"),
-                                fieldWithPath("children").description("folderTree children, it also has name and children")
-                            ),
-                        )
-                    )
+                mockMvc.put("$URI/1") {
+                    accept = MediaType.APPLICATION_JSON
+                    contentType = MediaType.APPLICATION_JSON
+                    content = Gson().toJson(mockFolderTree)
+                }.andExpect {
+                    status { isOk() }
+                    content { contentType(MediaType.APPLICATION_JSON) }
+                    content { json(Gson().toJson(mockFolderTree)) }
+                }
             }
-            it("if request format invalid, return 400 Response code") {
+            it("폴더 트리 요청 형식이 잘못되었다면, 400 에러와 형식이 잘못되었다는 메시지를 반환해야한다.") {
                 every { mockService.update(any(), any()) } returns mockFolderTree
-                mockMvc.perform(
-                    RestDocumentationRequestBuilders.put("$URI/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(Gson().toJson(mockFolderTree))
-                )
-                    .andExpect {
-                        status().isBadRequest
-                    }
-                    .andDo(MockMvcResultHandlers.print())
-                    .andDo(
-                        document(
-                            "update-folderTree",
-                            preprocessResponse(prettyPrint()),
-                            requestFields(
-                                fieldWithPath("name").description("folderTree name"),
-                                fieldWithPath("children").description("folderTree children, it also has name and children")
-                            ),
-                        )
-                    )
+                mockMvc.put("$URI/1") {
+                    accept = MediaType.APPLICATION_JSON
+                    contentType = MediaType.APPLICATION_JSON
+                    content = Gson().toJson("not a folder tree")
+                }.andExpect {
+                    status { isBadRequest() }
+                    content { contentType(MediaType.APPLICATION_JSON) }
+                    content { json(Gson().toJson(mapOf("message" to "FolderTree 형식이 아닙니다."))) }
+                }
             }
-            it("if update failed, return 500 response code with error message") {
+            it("폴더 트리 업데이트를 실패했다면, 500 에러를 반환해야한다.") {
                 every { mockService.update(any(), any()) } throws Exception("error")
-                mockMvc.perform(
-                    RestDocumentationRequestBuilders.put("$URI/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(Gson().toJson(mockFolderTree))
-                )
-                    .andExpect {
-                        status().isInternalServerError
-                        content().contentType(MediaType.APPLICATION_JSON)
-                        content().json("{\"message\":\"error\"}")
-                    }
-                    .andDo(MockMvcResultHandlers.print())
-                    .andDo(
-                        document(
-                            "update-folderTree",
-                            preprocessResponse(prettyPrint()),
-                            requestFields(
-                                fieldWithPath("name").description("folderTree name"),
-                                fieldWithPath("children").description("folderTree children, it also has name and children")
-                            ),
-                            responseFields(
-                                fieldWithPath("message").description("server error message")
-                            )
-                        )
-                    )
+                mockMvc.put("$URI/1") {
+                    accept = MediaType.APPLICATION_JSON
+                    contentType = MediaType.APPLICATION_JSON
+                    content = Gson().toJson(mockFolderTree)
+                }.andExpect {
+                    status { isInternalServerError() }
+                    content { contentType(MediaType.APPLICATION_JSON) }
+                    content { json(Gson().toJson(mapOf("message" to "error"))) }
+                }
             }
         }
         context("DELETE /api/folder/{id}") {
-            it("should return 204 response code") {
+            it("폴더 트리 삭제를 성공하면, 200 응답을 반환해야한다.") {
                 every { mockService.delete(any()) } returns Unit
-                mockMvc.perform(
-                    RestDocumentationRequestBuilders.delete("$URI/1")
-                )
-                    .andExpect {
-                        status().isNoContent
-                    }
-                    .andDo(MockMvcResultHandlers.print())
-                    .andDo(
-                        document(
-                            "delete-folderTree",
-                            preprocessResponse(prettyPrint()),
-                        )
-                    )
+                mockMvc.delete("$URI/1") {
+                    accept = MediaType.APPLICATION_JSON
+                }.andExpect {
+                    status { isOk() }
+                }
             }
-            it("if delete failed, return 500 response code with error message") {
+            it("폴더 트리 삭제를 실패한다면, 500 에러와 메시지를 반환해야한다.") {
                 every { mockService.delete(any()) } throws Exception("error")
-                mockMvc.perform(
-                    RestDocumentationRequestBuilders.delete("$URI/1")
-                )
-                    .andExpect {
-                        status().isInternalServerError
-                        content().contentType(MediaType.APPLICATION_JSON)
-                        content().json("{\"message\":\"server error message\"}")
-                    }
-                    .andDo(MockMvcResultHandlers.print())
-                    .andDo(
-                        document(
-                            "delete-folderTree",
-                            preprocessResponse(prettyPrint()),
-                            responseFields(
-                                fieldWithPath("message").description("server error message")
-                            )
-                        )
-                    )
+                mockMvc.delete("$URI/1") {
+                    accept = MediaType.APPLICATION_JSON
+                }.andExpect {
+                    status { isInternalServerError() }
+                    content { contentType(MediaType.APPLICATION_JSON) }
+                    content { json(Gson().toJson(mapOf("message" to "error"))) }
+                }
             }
         }
     }
