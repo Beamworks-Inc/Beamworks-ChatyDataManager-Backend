@@ -11,7 +11,7 @@ class FolderTreeController(private val mockService: FolderTreeService) {
     }
 
     @GetMapping("/{id}")
-    fun findFolderTreeById( @PathVariable id: String): FolderTree {
+    fun findFolderTreeById( @PathVariable id: String): FolderTree? {
         return mockService.findById(id)
     }
 
