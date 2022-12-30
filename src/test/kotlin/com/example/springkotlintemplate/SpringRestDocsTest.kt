@@ -1,5 +1,6 @@
 package com.example.springkotlintemplate
 
+import io.kotest.core.spec.style.DescribeSpec
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
@@ -20,7 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 @ActiveProfiles("local")
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(uriScheme = "https", uriHost = "localhost")
-class SpringRestDocsTest() {
+class SpringRestDocsTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
     @Test
