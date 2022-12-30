@@ -1,18 +1,20 @@
 package com.example.springkotlintemplate.FolderTree
 
+import com.example.springkotlintemplate.RestExceptionHandler.RestControllerAdviceConfig
 import com.google.gson.Gson
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.every
 import io.mockk.mockk
 import org.springframework.http.MediaType
-import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.*
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 
-
 class FolderTreeControllerTest: DescribeSpec({
     val mockService = mockk<FolderTreeService>()
-    val mockMvc= MockMvcBuilders.standaloneSetup(FolderTreeController(mockService)).build()
+    val mockMvc= MockMvcBuilders
+        .standaloneSetup(FolderTreeController(mockService))
+        .setControllerAdvice(RestControllerAdviceConfig())
+        .build()
     val URI="/api/folder"
     val mockFolderTree = FolderTree("root", listOf(
         FolderTree("child1", listOf(
@@ -21,7 +23,7 @@ class FolderTreeControllerTest: DescribeSpec({
         )),
         FolderTree("child2", listOf())
     ))
-    describe("FolderTreeController") @WithMockUser{
+    describe("FolderTreeController") {
         context("GET /api/folder") {
             it("모든 폴더 트리 리스트를 반환해야한다.") {
                 every { mockService.findAll() } returns listOf(mockFolderTree)
@@ -30,7 +32,7 @@ class FolderTreeControllerTest: DescribeSpec({
                 }.andExpect {
                     status { isOk() }
                     content { contentType(MediaType.APPLICATION_JSON) }
-                    content { json(Gson().toJson(listOf(mockFolderTree))) }
+                    content { string(Gson().toJson(listOf(mockFolderTree))) }
                 }
             }
             it("만약 폴더 트리 리스트가 없다면 빈 리스트를 반환해야한다.") {
@@ -40,7 +42,7 @@ class FolderTreeControllerTest: DescribeSpec({
                 }.andExpect {
                     status { isOk() }
                     content { contentType(MediaType.APPLICATION_JSON) }
-                    content { json("[]") }
+                    content { string("[]") }
                 }
             }
         }
@@ -54,31 +56,29 @@ class FolderTreeControllerTest: DescribeSpec({
                 }.andExpect {
                     status { isOk() }
                     content { contentType(MediaType.APPLICATION_JSON) }
-                    content { json(Gson().toJson(mockFolderTree)) }
+                    content { string(Gson().toJson(mockFolderTree)) }
                 }
             }
             it("요청 형식이 폴더 트리 형식이 아닌 경우 400 에러와 형식이 잘못되었다는 메시지를 반환해야한다.") {
-                every { mockService.create(any()) } returns mockFolderTree
                 mockMvc.post(URI) {
                     accept = MediaType.APPLICATION_JSON
                     contentType = MediaType.APPLICATION_JSON
                     content = Gson().toJson("not a folder tree")
                 }.andExpect {
-                    status { isBadRequest() }
-                    content { contentType(MediaType.APPLICATION_JSON) }
-                    content { json(Gson().toJson("요청 형식이 잘못되었습니다.")) }
+                    status { isUnsupportedMediaType() }
                 }
             }
             it("폴더 트리 생성을 실패하면, 500 에러와 메시지를 반환해야한다.") {
-                every { mockService.create(any()) } throws Exception("error")
+                every { mockService.create(any()) } throws Exception("폴더 트리 생성 실패")
                 mockMvc.post(URI) {
                     accept = MediaType.APPLICATION_JSON
                     contentType = MediaType.APPLICATION_JSON
                     content = Gson().toJson(mockFolderTree)
                 }.andExpect {
                     status { isInternalServerError() }
-                    content { contentType(MediaType.APPLICATION_JSON) }
-                    content { json(Gson().toJson(mapOf("message" to "error"))) }
+                    content {
+                        string("폴더 트리 생성 실패")
+                    }
                 }
             }
         }
@@ -92,7 +92,7 @@ class FolderTreeControllerTest: DescribeSpec({
                 }.andExpect {
                     status { isOk() }
                     content { contentType(MediaType.APPLICATION_JSON) }
-                    content { json(Gson().toJson(mockFolderTree)) }
+                    content { string(Gson().toJson(mockFolderTree)) }
                 }
             }
             it("폴더 트리 요청 형식이 잘못되었다면, 400 에러와 형식이 잘못되었다는 메시지를 반환해야한다.") {
@@ -102,21 +102,21 @@ class FolderTreeControllerTest: DescribeSpec({
                     contentType = MediaType.APPLICATION_JSON
                     content = Gson().toJson("not a folder tree")
                 }.andExpect {
-                    status { isBadRequest() }
-                    content { contentType(MediaType.APPLICATION_JSON) }
-                    content { json(Gson().toJson(mapOf("message" to "FolderTree 형식이 아닙니다."))) }
+                    status { isUnsupportedMediaType() }
                 }
             }
             it("폴더 트리 업데이트를 실패했다면, 500 에러를 반환해야한다.") {
-                every { mockService.update(any(), any()) } throws Exception("error")
+                every { mockService.update(any(), any()) } throws Exception("폴더 트리 업데이트 실패")
                 mockMvc.put("$URI/1") {
                     accept = MediaType.APPLICATION_JSON
                     contentType = MediaType.APPLICATION_JSON
                     content = Gson().toJson(mockFolderTree)
                 }.andExpect {
                     status { isInternalServerError() }
-                    content { contentType(MediaType.APPLICATION_JSON) }
-                    content { json(Gson().toJson(mapOf("message" to "error"))) }
+                    content {
+                        contentType(MediaType.APPLICATION_JSON_UTF8)
+                        string("폴더 트리 업데이트 실패")
+                    }
                 }
             }
         }
@@ -125,18 +125,22 @@ class FolderTreeControllerTest: DescribeSpec({
                 every { mockService.delete(any()) } returns Unit
                 mockMvc.delete("$URI/1") {
                     accept = MediaType.APPLICATION_JSON
+                    contentType = MediaType.APPLICATION_JSON
                 }.andExpect {
                     status { isOk() }
                 }
             }
             it("폴더 트리 삭제를 실패한다면, 500 에러와 메시지를 반환해야한다.") {
-                every { mockService.delete(any()) } throws Exception("error")
+                every { mockService.delete(any()) } throws Exception("폴더 트리 삭제 실패")
                 mockMvc.delete("$URI/1") {
                     accept = MediaType.APPLICATION_JSON
+                    contentType = MediaType.APPLICATION_JSON
                 }.andExpect {
                     status { isInternalServerError() }
-                    content { contentType(MediaType.APPLICATION_JSON) }
-                    content { json(Gson().toJson(mapOf("message" to "error"))) }
+                    content {
+                        contentType(MediaType.APPLICATION_JSON_UTF8)
+                        string("폴더 트리 삭제 실패")
+                    }
                 }
             }
         }
