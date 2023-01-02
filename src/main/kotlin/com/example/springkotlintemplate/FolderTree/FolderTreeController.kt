@@ -3,7 +3,7 @@ package com.example.springkotlintemplate.FolderTree
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/folder")
+@RequestMapping("/api/v1/folder")
 class FolderTreeController(private val mockService: FolderTreeService) {
     @GetMapping("")
     fun findAllFolderTree(): List<FolderTree> {

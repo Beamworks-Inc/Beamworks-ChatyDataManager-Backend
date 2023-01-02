@@ -15,7 +15,7 @@ class FolderTreeControllerTest: DescribeSpec({
         .standaloneSetup(FolderTreeController(mockService))
         .setControllerAdvice(RestControllerAdviceConfig())
         .build()
-    val URI="/api/folder"
+    val URI="/api/v1/folder"
     val mockFolderTree = FolderTree("root", listOf(
         FolderTree("child1", listOf(
             FolderTree("grandchild1", listOf()),
