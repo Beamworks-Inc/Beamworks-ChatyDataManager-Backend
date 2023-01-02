@@ -2,6 +2,7 @@ package com.example.springkotlintemplate.Contents
 
 import com.example.springkotlintemplate.Contents.Exception.ContentsNotFoundException
 import com.example.springkotlintemplate.Contents.VO.Contents
+import com.example.springkotlintemplate.FolderTree.Exception.FolderTreeNotFoundException
 import com.example.springkotlintemplate.FolderTree.FolderTreeService
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.spec.style.DescribeSpec
@@ -17,48 +18,60 @@ class ContentsServiceTest() : DescribeSpec({
     val mockContents= Contents()
     describe("ContentsServiceTest") {
         context("컨텐츠 데이터 가져오기") {
+            every { mockContentsRepository.findAllByFolderName(any()) } returns listOf(mockContents)
             it("폴더 이름을 입력받아서 폴더 내부의 파일 목록을 반환한다.") {
-                every { mockContentsRepository.findAllByFolderName(any()) } returns listOf(mockContents)
                 service.findAllByFolderName("folderName") shouldBe listOf(mockContents)
             }
         }
         context("컨텐츠 데이터 생성하기"){
-            it("컨텐츠 데이터에 명시된 폴더 이름이 존재하지 않는 경우 FolderNotFoundException 을 반환한다."){
-                every{mockFolderTreeService.findById(mockContents.folder.name)} throws FolderNotFoundException()
-                service.create(mockContents) shouldBe FolderNotFoundException()
+            context("컨텐츠 데이터에 명시된 폴더 이름이 존재하지 않는 경우"){
+                every { mockFolderTreeService.findById(any()) } returns null
+                it("FolderTreeNotFoundException 을 던진다.") {
+                    shouldThrowExactly<FolderTreeNotFoundException> {
+                        service.create(mockContents)
+                    }
+                }
             }
-            it("폴더 이름이 존재하는 경우 컨텐츠 데이터를 생성한다."){
-                every { mockContentsRepository.create(mockContents) } returns mockContents
-                service.create(mockContents) shouldBe mockContents
+            context("컨텐츠 데이터에 명시된 폴더 이름이 존재하는 경우"){
+                every { mockFolderTreeService.findById(any()) } returns mockk()
+                every { mockContentsRepository.create(any()) } returns mockContents
+                it("컨텐츠 데이터를 생성한다.") {
+                    service.create(mockContents) shouldBe mockContents
+                }
             }
         }
         context("컨텐츠 데이터 업데이트 하기"){
-            it("컨텐츠 데이터에 명시된 폴더 이름이 존재하지 않는 경우 FolderNotFoundException 을 반환한다."){
-                every{mockFolderTreeService.findById(any())} throws FolderNotFoundException()
-                service.update(any(),mockContents) shouldBe FolderNotFoundException()
-            }
-            it("컨텐츠 데이터에 명시된 컨텐츠 이름이 존재하지 않는 경우 ContentsNotFoundException 을 반환한다."){
-                every { mockContentsRepository.findById(any()) } throws ContentsNotFoundException()
-                shouldThrowExactly<ContentsNotFoundException> {
-                    service.update(any(),mockContents)
+            context("업데이트 할 컨텐츠 데이터가 존재하지 않는 경우"){
+                every { mockContentsRepository.findById(any()) } returns null
+                it("ContentsNotFoundException 을 던진다.") {
+                    shouldThrowExactly<ContentsNotFoundException> {
+                        service.update(1,mockContents)
+                    }
                 }
-             }
-            it("위 두가지 예외가 아닌 경우 컨텐츠 데이터를 업데이트한다."){
+            }
+            context("업데이트 할 컨텐츠 데이터가 존재하는 경우"){
                 every { mockContentsRepository.findById(any()) } returns mockContents
-                every { mockContentsRepository.findById(any()) } returns mockContents
-                service.update(any(),mockContents) shouldBe mockContents
+                every { mockContentsRepository.update(any(),any()) } returns mockContents
+                it("컨텐츠 데이터를 업데이트 한다.") {
+                    service.update(1,mockContents) shouldBe mockContents
+                }
             }
         }
         context("컨텐츠 데이터 삭제하기"){
-            it("컨텐츠 데이터에 명시된 컨텐츠 이름이 존재하지 않는 경우 ContentsNotFoundException 을 반환한다."){
-                every { mockContentsRepository.findById(any()) } throws ContentsNotFoundException()
-                shouldThrowExactly<ContentsNotFoundException> {
-                    service.delete(any())
+            context("삭제 할 컨텐츠 데이터가 존재하지 않는 경우"){
+                every { mockContentsRepository.findById(any()) } returns null
+                it("ContentsNotFoundException 을 던진다.") {
+                    shouldThrowExactly<ContentsNotFoundException> {
+                        service.delete(1)
+                    }
                 }
             }
-            it("컨텐츠가 존재하는 경우 컨텐츠 데이터를 삭제하고 결과를 반환한다."){
+            context("삭제 할 컨텐츠 데이터가 존재하는 경우"){
                 every { mockContentsRepository.findById(any()) } returns mockContents
-                service.delete(any()) shouldBe mockContents
+                every { mockContentsRepository.delete(any()) } returns mockContents
+                it("컨텐츠 데이터를 삭제한다.") {
+                    service.delete(1) shouldBe mockContents
+                }
             }
         }
 

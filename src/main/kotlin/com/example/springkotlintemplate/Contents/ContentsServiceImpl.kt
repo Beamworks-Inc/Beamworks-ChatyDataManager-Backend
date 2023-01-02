@@ -1,6 +1,8 @@
 package com.example.springkotlintemplate.Contents
 
+import com.example.springkotlintemplate.Contents.Exception.ContentsNotFoundException
 import com.example.springkotlintemplate.Contents.VO.Contents
+import com.example.springkotlintemplate.FolderTree.Exception.FolderTreeNotFoundException
 import com.example.springkotlintemplate.FolderTree.FolderTreeService
 import org.springframework.stereotype.Service
 
@@ -9,18 +11,22 @@ class ContentsServiceImpl(
     val mockContentsRepository: ContentsRepository,
     val mockFolderTreeService: FolderTreeService) : ContentsService {
     override fun findAllByFolderName(folderName: String): List<Contents> {
-        TODO("Not yet implemented")
+        return mockContentsRepository.findAllByFolderName(folderName)
     }
 
     override fun create(content: Contents): Contents {
-        TODO("Not yet implemented")
+        mockFolderTreeService.findById(content.folder.name)?: throw FolderTreeNotFoundException()
+        return mockContentsRepository.create(content) ?: throw Exception("Contents create failed")
     }
 
     override fun update(targetContentsId: Long, contents: Contents): Contents {
-        TODO("Not yet implemented")
+        mockContentsRepository.findById(targetContentsId) ?: throw ContentsNotFoundException()
+        return mockContentsRepository.update(targetContentsId, contents) ?: throw Exception("Contents update failed")
     }
 
     override fun delete(targetContentsId: Long): Contents {
-        TODO("Not yet implemented")
+        mockContentsRepository.findById(targetContentsId) ?: throw ContentsNotFoundException()
+        return mockContentsRepository.delete(targetContentsId) ?: throw Exception("Contents delete failed")
+
     }
 }
