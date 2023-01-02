@@ -7,4 +7,6 @@ class Reference(
     val title : String,
     val description : String,
     val link : URL
-)
+){
+    constructor(): this(0, "", "", URL("http://www.example.com"))
+}

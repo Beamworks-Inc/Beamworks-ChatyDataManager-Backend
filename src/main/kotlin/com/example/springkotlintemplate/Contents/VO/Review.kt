@@ -1,5 +1,5 @@
 package com.example.springkotlintemplate.Contents.VO
-
+import com.example.springkotlintemplate.User.User
 import java.util.Date
 
 data class Review(

@@ -4,5 +4,7 @@ enum class ReviewState {
     APPROVED,
     REJECTED,
     DRAFT,
-    REVIEW
+    REVIEW;
+    constructor() {
+    }
 }
