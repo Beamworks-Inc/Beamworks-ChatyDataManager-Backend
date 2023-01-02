@@ -1,21 +1,29 @@
 package com.example.springkotlintemplate.FolderTree
 
+import com.example.springkotlintemplate.Contents.ContentsControllerTest
 import com.example.springkotlintemplate.FolderTree.VO.FolderTree
-import com.example.springkotlintemplate.Config.RestExceptionHandler.RestControllerAdviceConfig
+import com.example.springkotlintemplate.MockMvcConfig
 import com.google.gson.Gson
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.every
-import io.mockk.mockk
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.restdocs.ManualRestDocumentation
 import org.springframework.test.web.servlet.*
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
 
-class FolderTreeControllerTest: DescribeSpec({
-    val mockService = mockk<FolderTreeService>()
-    val mockMvc= MockMvcBuilders
-        .standaloneSetup(FolderTreeController(mockService))
-        .setControllerAdvice(RestControllerAdviceConfig())
-        .build()
+@Import(MockMvcConfig::class)
+class FolderTreeControllerTest(
+    @Autowired private val mockMvc: MockMvc,
+    @Autowired private val mockService: FolderTreeService,
+    @Autowired private val restDocumentation : ManualRestDocumentation
+): DescribeSpec({
+    beforeEach {
+        restDocumentation.beforeTest(ContentsControllerTest::class.java,it.name.testName)
+    }
+    afterEach {
+        restDocumentation.afterTest()
+    }
     val URI="/api/v1/folder"
     val mockFolderTree = FolderTree("root", listOf(
         FolderTree("child1", listOf(

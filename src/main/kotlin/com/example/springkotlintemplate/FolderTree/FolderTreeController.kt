@@ -21,9 +21,9 @@ class FolderTreeController(private val mockService: FolderTreeService) {
         return mockService.create(folderTree)
     }
 
-    @PutMapping("/{id}",  produces = ["application/json"], consumes = ["application/json"])
-    fun updateFolderTree(@PathVariable id: String, @RequestBody folderTree: FolderTree): FolderTree {
-        return mockService.update(id, folderTree)
+    @PutMapping("/{rootName}",  produces = ["application/json"], consumes = ["application/json"])
+    fun updateFolderTree(@PathVariable rootName: String, @RequestBody folderTree: FolderTree): FolderTree {
+        return mockService.update(rootName, folderTree)
     }
 
     @DeleteMapping("/{id}", produces = ["application/json"])

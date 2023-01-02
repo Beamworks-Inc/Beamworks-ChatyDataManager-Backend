@@ -2,24 +2,29 @@ package com.example.springkotlintemplate.Contents
 
 import com.example.springkotlintemplate.Contents.Exception.ContentsNotFoundException
 import com.example.springkotlintemplate.Contents.VO.Contents
-import com.example.springkotlintemplate.Config.RestExceptionHandler.RestControllerAdviceConfig
+import com.example.springkotlintemplate.MockMvcConfig
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.every
-import io.mockk.mockk
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.delete
-import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.post
-import org.springframework.test.web.servlet.put
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import org.springframework.restdocs.ManualRestDocumentation
+import org.springframework.test.web.servlet.*
 
-class ContentsControllerTest :DescribeSpec({
-    val mockContentsService = mockk<ContentsService>()
-    val mockMvc= MockMvcBuilders
-        .standaloneSetup(ContentsController(mockContentsService))
-        .setControllerAdvice(RestControllerAdviceConfig())
-        .build()
+@Import(MockMvcConfig::class)
+class ContentsControllerTest(
+    @Autowired private val mockMvc: MockMvc,
+    @Autowired private val mockContentsService: ContentsService,
+    @Autowired private val restDocumentation : ManualRestDocumentation
+) :DescribeSpec({
+    beforeEach {
+        restDocumentation.beforeTest(ContentsControllerTest::class.java,it.name.testName)
+    }
+    afterEach {
+        restDocumentation.afterTest()
+    }
+
     val mockContents= Contents()
     val jsonMockContents= ObjectMapper().writeValueAsString(mockContents)
     val URI="/api/v1/contents"
