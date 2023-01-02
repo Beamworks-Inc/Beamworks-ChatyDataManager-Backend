@@ -6,7 +6,7 @@ import java.util.*
 
 data class Contents(
     val id: Long,
-    val folderName : FolderTree,
+    val folder : FolderTree,
     val question : String,
     val answer : String,
     val reference : List<Reference>,
