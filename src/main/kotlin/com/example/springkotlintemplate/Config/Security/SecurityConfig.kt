@@ -1,4 +1,4 @@
-package com.example.springkotlintemplate.Security
+package com.example.springkotlintemplate.Config.Security
 
 import org.springframework.context.annotation.Bean
 import org.springframework.http.HttpStatus

@@ -2,7 +2,7 @@ package com.example.springkotlintemplate.Contents
 
 import com.example.springkotlintemplate.Contents.Exception.ContentsNotFoundException
 import com.example.springkotlintemplate.Contents.VO.Contents
-import com.example.springkotlintemplate.RestExceptionHandler.RestControllerAdviceConfig
+import com.example.springkotlintemplate.Config.RestExceptionHandler.RestControllerAdviceConfig
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.every

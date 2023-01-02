@@ -1,4 +1,4 @@
-package com.example.springkotlintemplate.RestExceptionHandler
+package com.example.springkotlintemplate.Config.RestExceptionHandler
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
