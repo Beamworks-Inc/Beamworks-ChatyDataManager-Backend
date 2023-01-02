@@ -1,4 +1,4 @@
-package com.example.springkotlintemplate.FolderTree
+package com.example.springkotlintemplate.FolderTree.VO
 
 data class FolderTree(
     val name : String,

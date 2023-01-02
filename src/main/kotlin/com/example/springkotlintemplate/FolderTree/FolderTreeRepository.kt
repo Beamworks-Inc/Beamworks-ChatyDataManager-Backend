@@ -1,5 +1,7 @@
 package com.example.springkotlintemplate.FolderTree
 
+import com.example.springkotlintemplate.FolderTree.VO.FolderTree
+
 
 interface FolderTreeRepository {
     fun findByName(name: String) : FolderTree?

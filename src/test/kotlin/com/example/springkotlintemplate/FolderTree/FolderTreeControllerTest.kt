@@ -1,5 +1,6 @@
 package com.example.springkotlintemplate.FolderTree
 
+import com.example.springkotlintemplate.FolderTree.VO.FolderTree
 import com.example.springkotlintemplate.RestExceptionHandler.RestControllerAdviceConfig
 import com.google.gson.Gson
 import io.kotest.core.spec.style.DescribeSpec
