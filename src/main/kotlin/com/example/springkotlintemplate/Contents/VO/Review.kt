@@ -5,7 +5,7 @@ import java.util.Date
 data class Review(
     val id: Int,
     val reviewer : User,
-    val reviewData : Date,
+    val reviewDate : Date,
     val reviewComment : String
 ){
     constructor(): this(0, User(), Date(), "")

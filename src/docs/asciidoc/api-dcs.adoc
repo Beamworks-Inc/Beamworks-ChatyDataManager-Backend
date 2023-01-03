@@ -1,20 +1,107 @@
 ifndef::snippets[]
 :snippets: ../../../build/generated-snippets
 endif::[]
-= Application Name
+= 저작도구 API Documentation
 :toc: left
 :toclevels: 2
 :sectlinks:
 
 
 [[resources-developer-find]]
-=== 조회 API
+== FolderTree API
+저작도구를 위한 폴더트리 데이터를 관리 API 입니다.
+
+=== GET /api/folderTree
+==== Description
+모든 폴더트리 리스트를 반환한다. 각 리스트의 원소는 하나의 폴더트리 루트를 의미하며, 각 루트는 재귀적으로 자식 폴더 트리를 포함하고 있습니다.
 
 ==== HTTP request
-include::{snippets}/find-developer/path-parameters.adoc[]
-include::{snippets}/find-developer/http-request.adoc[]
+include::{snippets}/folder-tree-get/http-request.adoc[]
 
 ==== HTTP response
-include::{snippets}/find-developer/response-fields.adoc[]
-include::{snippets}/find-developer/response-body.adoc[]
-include::{snippets}/find-developer/http-response.adoc[]
+include::{snippets}/folder-tree-get/response-fields.adoc[]
+include::{snippets}/folder-tree-get/response-body.adoc[]
+include::{snippets}/folder-tree-get/http-response.adoc[]
+
+=== POST /api/folderTree
+==== Description
+새로운 폴더 트리를 추가하기 위한 API 입니다. 성공적으로 추가하면 응답으로 추가된 폴더트리의 정보를 반환합니다.
+잘못된 폴더 트리 정보를 입력하면 400 에러를 반환합니다. 서버에서 에러가 발생한경우 500 에러와 메시지를 반환합니다.
+
+==== HTTP request
+include::{snippets}/folder-tree-post/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/folder-tree-post/response-fields.adoc[]
+include::{snippets}/folder-tree-post/response-body.adoc[]
+include::{snippets}/folder-tree-post/http-response.adoc[]
+
+=== PUT /api/folderTree/{id}
+==== Description
+기존 폴더 트리 정보를 수정하기 위한 API 입니다. 수정하고자 하는 폴더명과 폴더 정보를 입력하여 수정이 가능합니다.
+잘못된 폴더 트리 정보를 입력하거나 존재하지 않는 폴더명을 입력하는 경우 400 에러를 반환합니다.
+서버에서 에러가 발생한경우 500 에러와 메시지를 반환합니다.
+
+
+==== HTTP request
+include::{snippets}/folder-tree-put/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/folder-tree-put/response-fields.adoc[]
+include::{snippets}/folder-tree-put/response-body.adoc[]
+include::{snippets}/folder-tree-put/http-response.adoc[]
+
+=== DELETE /api/folderTree/{id}
+==== Description
+폴더 트리 정보를 삭제하기 위한 API 입니다. 삭제하고자 하는 폴더 트리의 id를 입력하여 삭제가 가능합니다.
+존재하지 않는 폴더명을 입력하는 경우 400 에러를 반환합니다.
+
+==== HTTP request
+include::{snippets}/folder-tree-delete/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/folder-tree-delete/http-response.adoc[]
+
+== Contents API
+
+=== GET /api/contents/{folderName}
+==== Description
+폴더 이름을 입력하여 해당 폴더에 속한 컨텐츠 정보를 가져오기 위한 API 입니다.
+
+==== HTTP request
+include::{snippets}/contents-get-all-by-folder-name/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/contents-get-all-by-folder-name/response-body.adoc[]
+include::{snippets}/contents-get-all-by-folder-name/http-response.adoc[]
+
+=== POST /api/contents
+==== Description
+새로운 컨텐츠를 생성하기 위한 API 입니다.
+
+==== HTTP request
+include::{snippets}/contents-get-all-by-folder-name/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/contents-get-all-by-folder-name/http-response.adoc[]
+
+=== PUT /api/contents/{folderId}
+==== Description
+폴더 이름을 입력하여 해당 폴더에 속한 컨텐츠 정보를 수정하기 위한 API 입니다.
+
+==== HTTP request
+include::{snippets}/contents-update/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/contents-update/http-response.adoc[]
+
+=== DELETE /api/contents/{folderId}
+==== Description
+폴더 이름을 입력하여 해당 폴더에 속한 컨텐츠 정보를 삭제하기 위한 API 입니다.
+
+==== HTTP request
+include::{snippets}/contents-delete/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/contents-delete/http-response.adoc[]
+
