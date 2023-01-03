@@ -23,11 +23,11 @@ class FolderTreeServiceImpl(
 
     override fun delete(id: String) {
         folderTreeRepository.findByName(id) ?: throw FolderTreeNotFoundException()
-        folderTreeRepository.delete(id)
+        folderTreeRepository.deleteByName(id)
     }
 
     override fun findAll(): List<FolderTree> {
-        return folderTreeRepository.findAll()
+        return folderTreeRepository.findAll().toList()
     }
 
     override fun findById(id: String): FolderTree? {

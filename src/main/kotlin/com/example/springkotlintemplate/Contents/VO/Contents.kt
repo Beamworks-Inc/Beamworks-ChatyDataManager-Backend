@@ -3,18 +3,26 @@ package com.example.springkotlintemplate.Contents.VO
 import com.example.springkotlintemplate.FolderTree.VO.FolderTree
 import com.example.springkotlintemplate.User.User
 import java.util.*
+import javax.persistence.ElementCollection
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.Id
+import javax.persistence.OneToOne
 
+@Entity
 data class Contents(
+    @Id
+    @GeneratedValue(strategy = javax.persistence.GenerationType.AUTO)
     val id: Long,
-    val folder : FolderTree,
+    @OneToOne val folder : FolderTree,
     val question : String,
     val answer : String,
-    val reference : List<Reference>,
-    val rationale : Rationale,
+    @ElementCollection val reference : List<Reference>,
+    @OneToOne val rationale : Rationale,
     val writeDate : Date,
-    val writer : User,
-    val keyword : List<String>,
-    val review : Review,
+    @OneToOne val writer : User,
+    @ElementCollection val keyword : List<String>,
+    @OneToOne val review : Review,
     val state : ReviewState
 ){
     constructor(): this(0,

@@ -61,7 +61,7 @@ class FolderTreeServiceTest: DescribeSpec({
         context("폴더 트리 데이터 삭제"){
             context("폴더 트리 데이터가 존재할 때"){
                 every { mockRepository.findByName(newFolderTreeData.name) } returns newFolderTreeData
-                every { mockRepository.delete(newFolderTreeData.name) } returns Unit
+                every { mockRepository.deleteByName(newFolderTreeData.name) } returns Unit
                 it("폴더 트리 데이터를 삭제해야한다."){
                     service.delete(newFolderTreeData.name).shouldBe(Unit)
                 }

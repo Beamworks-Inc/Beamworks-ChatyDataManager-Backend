@@ -143,7 +143,7 @@ class ContentsControllerTest(
             }
         }
         context("DELETE $URI/{contentsId}"){
-            every { mockContentsService.delete( any()) } returns mockContents
+            every { mockContentsService.delete( any()) } returns Unit
             it("컨텐츠를 삭제하고 결과를 반환해야한다.") {
                 mockMvc.perform(
                     delete("$URI/{contentsId}", 1)

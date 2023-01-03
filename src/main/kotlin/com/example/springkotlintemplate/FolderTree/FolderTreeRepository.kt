@@ -1,14 +1,12 @@
 package com.example.springkotlintemplate.FolderTree
 
 import com.example.springkotlintemplate.FolderTree.VO.FolderTree
+import org.springframework.data.repository.CrudRepository
+import org.springframework.stereotype.Repository
 
-
-interface FolderTreeRepository {
+@Repository
+interface FolderTreeRepository: CrudRepository<FolderTree,Long> {
     fun findByName(name: String) : FolderTree?
-
-    fun findAll(): List<FolderTree>
-
-    fun save(folderTree: FolderTree): FolderTree
-    fun delete(name: String)
+    fun deleteByName(name : String)
 
 }

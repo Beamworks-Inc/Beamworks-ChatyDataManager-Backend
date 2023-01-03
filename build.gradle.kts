@@ -23,6 +23,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web:2.7.6")
     //For Oauth2 Setting
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client:2.7.6")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.7.6")
+    implementation("mysql:mysql-connector-java:8.0.30")
+
     testImplementation("org.springframework.security:spring-security-test:5.7.6")
 
     testImplementation("org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.6.RELEASE")
