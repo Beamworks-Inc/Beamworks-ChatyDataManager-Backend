@@ -20,13 +20,16 @@ class ContentsServiceImpl(
     }
 
     override fun update(targetContentsId: Long, contents: Contents): Contents {
-        contentsRepository.findById(targetContentsId).isEmpty.let { throw ContentsNotFoundException() }
-        contents.id = targetContentsId
+        if(contentsRepository.findById(targetContentsId).isEmpty){
+            throw ContentsNotFoundException()
+        }
         return contentsRepository.save(contents)
     }
 
     override fun delete(targetContentsId: Long) {
-        contentsRepository.findById(targetContentsId).isEmpty.let { throw ContentsNotFoundException() }
+        if(contentsRepository.findById(targetContentsId).isEmpty){
+            throw ContentsNotFoundException()
+        }
         return contentsRepository.deleteById(targetContentsId)
 
     }

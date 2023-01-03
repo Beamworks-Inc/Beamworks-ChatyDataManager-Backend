@@ -42,7 +42,7 @@ class ContentsServiceTest() : DescribeSpec({
         }
         context("컨텐츠 데이터 업데이트 하기"){
             context("업데이트 할 컨텐츠 데이터가 존재하지 않는 경우"){
-                every { mockContentsRepository.findById(any()) } returns Optional.of(mockContents)
+                every { mockContentsRepository.findById(any()) } returns Optional.empty()
                 it("ContentsNotFoundException 을 던진다.") {
                     shouldThrowExactly<ContentsNotFoundException> {
                         service.update(1,mockContents)
@@ -68,9 +68,9 @@ class ContentsServiceTest() : DescribeSpec({
             }
             context("삭제 할 컨텐츠 데이터가 존재하는 경우"){
                 every { mockContentsRepository.findById(any()) } returns Optional.of(mockContents)
-                every { mockContentsRepository.delete(any()) } returns Unit
+                every { mockContentsRepository.deleteById(any()) } returns Unit
                 it("컨텐츠 데이터를 삭제한다.") {
-                    service.delete(1) shouldBe mockContents
+                    service.delete(1) shouldBe Unit
                 }
             }
         }
