@@ -1,5 +1,7 @@
 package com.example.springkotlintemplate.FolderTree
 
+import com.example.springkotlintemplate.FolderTree.VO.FolderTree
+
 interface FolderTreeService {
     fun create(folderTree: FolderTree) : FolderTree
     fun update(targetId : String,folderTree: FolderTree): FolderTree

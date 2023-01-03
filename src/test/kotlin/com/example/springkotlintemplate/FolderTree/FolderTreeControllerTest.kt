@@ -1,39 +1,60 @@
 package com.example.springkotlintemplate.FolderTree
 
-import com.example.springkotlintemplate.RestExceptionHandler.RestControllerAdviceConfig
+import com.example.springkotlintemplate.FolderTree.VO.FolderTree
+import com.example.springkotlintemplate.MockMvcConfig
 import com.google.gson.Gson
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.every
-import io.mockk.mockk
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.restdocs.ManualRestDocumentation
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*
+import org.springframework.restdocs.operation.preprocess.Preprocessors.*
+import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
+import org.springframework.test.web.client.match.MockRestRequestMatchers.content
 import org.springframework.test.web.servlet.*
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-class FolderTreeControllerTest: DescribeSpec({
-    val mockService = mockk<FolderTreeService>()
-    val mockMvc= MockMvcBuilders
-        .standaloneSetup(FolderTreeController(mockService))
-        .setControllerAdvice(RestControllerAdviceConfig())
-        .build()
+
+@Import(MockMvcConfig::class)
+class FolderTreeControllerTest(
+    @Autowired private val mockMvc: MockMvc,
+    @Autowired private val mockService: FolderTreeService,
+    @Autowired private val restDocumentation : ManualRestDocumentation
+): DescribeSpec({
+    beforeEach {
+        restDocumentation.beforeTest(FolderTreeController::class.java,it.name.testName)
+    }
+    afterEach {
+        restDocumentation.afterTest()
+    }
     val URI="/api/v1/folder"
     val mockFolderTree = FolderTree("root", listOf(
-        FolderTree("child1", listOf(
-            FolderTree("grandchild1", listOf()),
-            FolderTree("grandchild2", listOf())
-        )),
-        FolderTree("child2", listOf())
+        FolderTree("child1", listOf())
     ))
     describe("FolderTreeController") {
         context("GET /api/folder") {
             it("모든 폴더 트리 리스트를 반환해야한다.") {
                 every { mockService.findAll() } returns listOf(mockFolderTree)
-                mockMvc.get(URI) {
-                    accept = MediaType.APPLICATION_JSON
-                }.andExpect {
-                    status { isOk() }
-                    content { contentType(MediaType.APPLICATION_JSON) }
-                    content { string(Gson().toJson(listOf(mockFolderTree))) }
-                }
+                mockMvc.perform(
+                    get(URI)
+                ).andExpect {
+                    status().isOk
+                    content().json(Gson().toJson(listOf(mockFolderTree)))
+                    content().contentType(MediaType.APPLICATION_JSON)
+                }.andDo(document("folder-tree-get",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    responseFields(
+                        fieldWithPath("[].name").description("폴더 이름"),
+                        fieldWithPath("[].children").description("하위 폴더 리스트, 없으면 빈 리스트"),
+                        fieldWithPath("[].children[].name").description("하위 폴더 이름"),
+                        fieldWithPath("[].children[].children").description("하위 폴더의 하위 폴더 리스트, 없으면 빈 리스트"),
+                    ),
+                ))
             }
             it("만약 폴더 트리 리스트가 없다면 빈 리스트를 반환해야한다.") {
                 every { mockService.findAll() } returns listOf()
@@ -49,15 +70,24 @@ class FolderTreeControllerTest: DescribeSpec({
         context("POST /api/folder") {
             it("폴더 트리를 만들고 결과를 반환해야한다.") {
                 every { mockService.create(any()) } returns mockFolderTree
-                mockMvc.post(URI) {
-                    accept = MediaType.APPLICATION_JSON
-                    contentType = MediaType.APPLICATION_JSON
-                    content = Gson().toJson(mockFolderTree)
-                }.andExpect {
-                    status { isOk() }
-                    content { contentType(MediaType.APPLICATION_JSON) }
-                    content { string(Gson().toJson(mockFolderTree)) }
-                }
+                mockMvc.perform(
+                    post(URI)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(Gson().toJson(mockFolderTree))
+                ).andExpect {
+                    status().isOk
+                    content().json(Gson().toJson(mockFolderTree))
+                    content().contentType(MediaType.APPLICATION_JSON)
+                }.andDo(document("folder-tree-post",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    responseFields(
+                        fieldWithPath("name").description("폴더 이름"),
+                        fieldWithPath("children").description("하위 폴더 리스트, 없으면 빈 리스트"),
+                        fieldWithPath("children[].name").description("하위 폴더 이름"),
+                        fieldWithPath("children[].children").description("하위 폴더의 하위 폴더 리스트, 없으면 빈 리스트"),
+                    )
+                ))
             }
             it("요청 형식이 폴더 트리 형식이 아닌 경우 400 에러와 형식이 잘못되었다는 메시지를 반환해야한다.") {
                 mockMvc.post(URI) {
@@ -85,15 +115,24 @@ class FolderTreeControllerTest: DescribeSpec({
         context("PUT /api/folder/{id}") {
             it("업데이트된 폴더 트리를 반환해야한다.") {
                 every { mockService.update(any(), any()) } returns mockFolderTree
-                mockMvc.put("$URI/1") {
-                    accept = MediaType.APPLICATION_JSON
-                    contentType = MediaType.APPLICATION_JSON
-                    content = Gson().toJson(mockFolderTree)
-                }.andExpect {
-                    status { isOk() }
-                    content { contentType(MediaType.APPLICATION_JSON) }
-                    content { string(Gson().toJson(mockFolderTree)) }
-                }
+                mockMvc.perform(
+                    put("$URI/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(Gson().toJson(mockFolderTree))
+                ).andExpect {
+                    status().isOk
+                    content().json(Gson().toJson(mockFolderTree))
+                    content().contentType(MediaType.APPLICATION_JSON)
+                }.andDo(document("folder-tree-put",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    responseFields(
+                        fieldWithPath("name").description("폴더 이름"),
+                        fieldWithPath("children").description("하위 폴더 리스트, 없으면 빈 리스트"),
+                        fieldWithPath("children[].name").description("하위 폴더 이름"),
+                        fieldWithPath("children[].children").description("하위 폴더의 하위 폴더 리스트, 없으면 빈 리스트"),
+                    )
+                ))
             }
             it("폴더 트리 요청 형식이 잘못되었다면, 400 에러와 형식이 잘못되었다는 메시지를 반환해야한다.") {
                 every { mockService.update(any(), any()) } returns mockFolderTree
@@ -123,12 +162,11 @@ class FolderTreeControllerTest: DescribeSpec({
         context("DELETE /api/folder/{id}") {
             it("폴더 트리 삭제를 성공하면, 200 응답을 반환해야한다.") {
                 every { mockService.delete(any()) } returns Unit
-                mockMvc.delete("$URI/1") {
-                    accept = MediaType.APPLICATION_JSON
-                    contentType = MediaType.APPLICATION_JSON
-                }.andExpect {
-                    status { isOk() }
-                }
+                mockMvc.perform(
+                    delete("$URI/1")
+                ).andExpect {
+                    status().isOk
+                }.andDo(document("folder-tree-delete"))
             }
             it("폴더 트리 삭제를 실패한다면, 500 에러와 메시지를 반환해야한다.") {
                 every { mockService.delete(any()) } throws Exception("폴더 트리 삭제 실패")

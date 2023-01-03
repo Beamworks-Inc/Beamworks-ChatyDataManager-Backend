@@ -2,6 +2,7 @@ package com.example.springkotlintemplate.FolderTree
 
 import com.example.springkotlintemplate.FolderTree.Exception.FolderTreeAlreadyExistException
 import com.example.springkotlintemplate.FolderTree.Exception.FolderTreeNotFoundException
+import com.example.springkotlintemplate.FolderTree.VO.FolderTree
 import org.springframework.stereotype.Service
 
 @Service

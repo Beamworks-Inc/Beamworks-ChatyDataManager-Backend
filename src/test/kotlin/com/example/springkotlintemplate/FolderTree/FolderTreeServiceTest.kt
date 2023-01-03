@@ -2,6 +2,7 @@ package com.example.springkotlintemplate.FolderTree
 
 import com.example.springkotlintemplate.FolderTree.Exception.FolderTreeAlreadyExistException
 import com.example.springkotlintemplate.FolderTree.Exception.FolderTreeNotFoundException
+import com.example.springkotlintemplate.FolderTree.VO.FolderTree
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
