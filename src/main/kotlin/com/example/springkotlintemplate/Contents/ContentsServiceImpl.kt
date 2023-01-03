@@ -8,25 +8,26 @@ import org.springframework.stereotype.Service
 
 @Service
 class ContentsServiceImpl(
-    val mockContentsRepository: ContentsRepository,
-    val mockFolderTreeService: FolderTreeService) : ContentsService {
+    val contentsRepository: ContentsRepository,
+    val folderTreeService: FolderTreeService) : ContentsService {
     override fun findAllByFolderName(folderName: String): List<Contents> {
-        return mockContentsRepository.findAllByFolderName(folderName)
+        return contentsRepository.findAllByFolderName(folderName)
     }
 
     override fun create(content: Contents): Contents {
-        mockFolderTreeService.findById(content.folder.name)?: throw FolderTreeNotFoundException()
-        return mockContentsRepository.create(content) ?: throw Exception("Contents create failed")
+        folderTreeService.findById(content.folder.name)?: throw FolderTreeNotFoundException()
+        return contentsRepository.save(content)
     }
 
     override fun update(targetContentsId: Long, contents: Contents): Contents {
-        mockContentsRepository.findById(targetContentsId) ?: throw ContentsNotFoundException()
-        return mockContentsRepository.update(targetContentsId, contents) ?: throw Exception("Contents update failed")
+        contentsRepository.findById(targetContentsId).isEmpty.let { throw ContentsNotFoundException() }
+        contents.id = targetContentsId
+        return contentsRepository.save(contents)
     }
 
-    override fun delete(targetContentsId: Long): Contents {
-        mockContentsRepository.findById(targetContentsId) ?: throw ContentsNotFoundException()
-        return mockContentsRepository.delete(targetContentsId) ?: throw Exception("Contents delete failed")
+    override fun delete(targetContentsId: Long) {
+        contentsRepository.findById(targetContentsId).isEmpty.let { throw ContentsNotFoundException() }
+        return contentsRepository.deleteById(targetContentsId)
 
     }
 }

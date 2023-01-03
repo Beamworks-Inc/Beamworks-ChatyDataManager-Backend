@@ -28,7 +28,7 @@ class ContentsController(
         contentsService.update(contentsId, contents)
 
     @DeleteMapping("/{contentsId}")
-    fun delete(@PathVariable contentsId: Long): Contents =
+    fun delete(@PathVariable contentsId: Long) =
         contentsService.delete(contentsId)
 
 }

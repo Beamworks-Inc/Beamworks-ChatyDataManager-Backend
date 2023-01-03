@@ -1,11 +1,10 @@
 package com.example.springkotlintemplate.Contents
 
 import com.example.springkotlintemplate.Contents.VO.Contents
+import org.springframework.data.repository.CrudRepository
+import org.springframework.stereotype.Repository
 
-interface ContentsRepository {
+@Repository
+interface ContentsRepository: CrudRepository<Contents,Long> {
     fun findAllByFolderName(folderName : String) : List<Contents>
-    fun findById(id : Long) : Contents?
-    fun create(mockContents: Contents): Contents?
-    fun update(id: Long, mockContents: Contents): Contents?
-    fun delete(targetContentsId: Long): Contents?
 }

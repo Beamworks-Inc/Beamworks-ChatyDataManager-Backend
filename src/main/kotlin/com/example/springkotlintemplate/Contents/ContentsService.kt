@@ -6,5 +6,5 @@ interface ContentsService {
     fun findAllByFolderName(folderName: String): List<Contents>
     fun create(content : Contents): Contents
     fun update(targetContentsId: Long, contents: Contents) : Contents
-    fun delete(targetContentsId: Long) : Contents
+    fun delete(targetContentsId: Long)
 }
