@@ -25,7 +25,13 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:mysql://${RDS_USERNAME}:${RDS_PASSWORD}!@${RDS_HOSTNAME}:${RDS_PORT}/${RDS_DB_NAME}?createDatabaseIfNotExist=true
+    url: jdbc:mysql://${AWS_RDS_USER}:${AWS_RDS_PWD}!@${RDS_HOSTNAME}:${RDS_PORT}/${RDS_DB_NAME}?createDatabaseIfNotExist=true
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database: mysql
   security:
     oauth2:
       client:
