@@ -1,4 +1,4 @@
-package com.example.springkotlintemplate.Contents.VO
+package com.example.springkotlintemplate.Contents.Entity
 import com.example.springkotlintemplate.User.User
 import java.util.Date
 import javax.persistence.Entity

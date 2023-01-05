@@ -1,4 +1,4 @@
-package com.example.springkotlintemplate.Contents.VO
+package com.example.springkotlintemplate.Contents.Entity
 
 import java.net.URL
 import javax.persistence.*

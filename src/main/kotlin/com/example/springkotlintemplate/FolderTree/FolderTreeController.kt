@@ -2,7 +2,6 @@ package com.example.springkotlintemplate.FolderTree
 
 import com.example.springkotlintemplate.FolderTree.Dto.FolderTreeRequestDto
 import com.example.springkotlintemplate.FolderTree.Dto.FolderTreeResponseDto
-import com.example.springkotlintemplate.FolderTree.Entity.FolderTree
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -14,7 +13,7 @@ class FolderTreeController(private val mockService: FolderTreeService) {
     }
 
     @GetMapping("/{id}")
-    fun findFolderTreeById( @PathVariable id: String): FolderTreeResponseDto? {
+    fun findFolderTreeById( @PathVariable id: Long): FolderTreeResponseDto? {
         return mockService.findById(id)
     }
 

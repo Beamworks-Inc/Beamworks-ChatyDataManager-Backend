@@ -1,16 +1,15 @@
-package com.example.springkotlintemplate.Contents.VO
+package com.example.springkotlintemplate.Contents.Entity
 
 import java.net.URL
 import javax.persistence.Embeddable
 import javax.persistence.Id
 
 @Embeddable
-class Reference(
+class RationaleDescription(
     @Id
     val id : Long,
-    val title : String,
     val description : String,
     val link : URL
-){
-    constructor(): this(0, "", "", URL("http://www.example.com"))
+) {
+    constructor() : this(0, "", URL("http://www.example.com"))
 }

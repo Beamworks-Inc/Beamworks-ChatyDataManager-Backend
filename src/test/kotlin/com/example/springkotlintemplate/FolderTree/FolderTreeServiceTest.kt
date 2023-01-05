@@ -1,7 +1,6 @@
 package com.example.springkotlintemplate.FolderTree
 
 import com.example.springkotlintemplate.FolderTree.Dto.FolderTreeRequestDto
-import com.example.springkotlintemplate.FolderTree.Exception.FolderTreeAlreadyExistException
 import com.example.springkotlintemplate.FolderTree.Exception.FolderTreeNotFoundException
 import com.example.springkotlintemplate.FolderTree.Entity.FolderTree
 import io.kotest.assertions.throwables.shouldThrowExactly

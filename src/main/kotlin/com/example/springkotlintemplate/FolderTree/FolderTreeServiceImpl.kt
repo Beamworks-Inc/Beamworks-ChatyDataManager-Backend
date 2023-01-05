@@ -41,12 +41,17 @@ class FolderTreeServiceImpl(
             .toList()
     }
 
-    override fun findById(id: String): FolderTreeResponseDto? {
+    override fun findByName(id: String): FolderTreeResponseDto? {
         val result=folderTreeRepository.findByName(id) ?: throw FolderTreeNotFoundException()
         return result.toFolderTreeResponse()
     }
 
+
     override fun deleteAll() {
         folderTreeRepository.deleteAll()
+    }
+
+    override fun findById(folderId: Long): FolderTreeResponseDto? {
+        return folderTreeRepository.findById(folderId).orElse(null)?.toFolderTreeResponse()
     }
 }
