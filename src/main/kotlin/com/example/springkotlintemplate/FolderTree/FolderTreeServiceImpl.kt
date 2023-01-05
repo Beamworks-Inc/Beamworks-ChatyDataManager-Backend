@@ -30,12 +30,18 @@ class FolderTreeServiceImpl(
         folderTreeRepository.deleteByName(id)
     }
 
-    override fun findAll(): List<FolderTreeResponseDto> {
-        return folderTreeRepository.findAll().map { it.toFolderTreeResponse() }.toList()
+    override fun findAllRootFolder(): List<FolderTreeResponseDto> {
+        return folderTreeRepository.findAllByParentIsNull()
+            .map { it.toFolderTreeResponse() }
+            .toList()
     }
 
     override fun findById(id: String): FolderTreeResponseDto? {
         val result=folderTreeRepository.findByName(id) ?: throw FolderTreeNotFoundException()
         return result.toFolderTreeResponse()
+    }
+
+    override fun deleteAll() {
+        folderTreeRepository.deleteAll()
     }
 }

@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository
 interface FolderTreeRepository: CrudRepository<FolderTree,Long> {
     fun findByName(name: String) : FolderTree?
     fun deleteByName(name : String)
-
+    fun findAllByParentIsNull() : List<FolderTree>
 }

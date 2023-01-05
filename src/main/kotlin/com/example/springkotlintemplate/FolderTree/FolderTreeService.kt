@@ -8,7 +8,8 @@ interface FolderTreeService {
     fun create(folderTree: FolderTreeRequestDto) : FolderTreeResponseDto
     fun update(targetId : String,folderTree: FolderTreeRequestDto): FolderTreeResponseDto
     fun delete(id: String)
-    fun findAll(): List<FolderTreeResponseDto>
+    fun findAllRootFolder(): List<FolderTreeResponseDto>
     fun findById(id: String): FolderTreeResponseDto?
+    fun deleteAll()
 
 }

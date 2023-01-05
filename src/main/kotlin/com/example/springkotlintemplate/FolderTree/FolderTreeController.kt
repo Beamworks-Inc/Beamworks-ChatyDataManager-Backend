@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/folder")
 class FolderTreeController(private val mockService: FolderTreeService) {
     @GetMapping("")
-    fun findAllFolderTree(): List<FolderTreeResponseDto> {
-        return mockService.findAll()
+    fun findAllRootFolderTree(): List<FolderTreeResponseDto> {
+        return mockService.findAllRootFolder()
     }
 
     @GetMapping("/{id}")
@@ -32,5 +32,8 @@ class FolderTreeController(private val mockService: FolderTreeService) {
     fun deleteFolderTree(@PathVariable id: String) {
         return mockService.delete(id)
     }
-
+    @DeleteMapping("")
+    fun deleteAllFolderTree() {
+        return mockService.deleteAll()
+    }
 }

@@ -89,7 +89,7 @@ class FolderTreeServiceTest: DescribeSpec({
                 context("폴더 트리 데이터가 존재하지 않는다면") {
                     every { mockRepository.findAll() } returns listOf()
                     it("빈 리스트를 반환해야한다.") {
-                        service.findAll().shouldBe(listOf())
+                        service.findAllRootFolder().shouldBe(listOf())
                     }
                 }
             }
