@@ -2,7 +2,6 @@ package com.example.springkotlintemplate.FolderTree
 
 import com.example.springkotlintemplate.FolderTree.Dto.FolderTreeRequestDto
 import com.example.springkotlintemplate.FolderTree.Dto.FolderTreeResponseDto
-import com.example.springkotlintemplate.FolderTree.Entity.FolderTree
 
 interface FolderTreeService {
     fun create(folderTree: FolderTreeRequestDto) : FolderTreeResponseDto

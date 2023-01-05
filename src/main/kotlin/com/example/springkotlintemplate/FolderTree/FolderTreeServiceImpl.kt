@@ -20,8 +20,13 @@ class FolderTreeServiceImpl(
     }
 
     override fun update(targetId: String, folderTreeRequestDto: FolderTreeRequestDto): FolderTreeResponseDto {
-        val folderTree=folderTreeRequestDto.toFolderTreeEntity()
-        folderTreeRepository.findByName(folderTree.name) ?: throw FolderTreeNotFoundException()
+        val targetFolderTree=folderTreeRepository.findByName(targetId)?: throw FolderTreeNotFoundException()
+        val folderTree=FolderTree(
+            targetFolderTree.id,
+            folderTreeRequestDto.name,
+            targetFolderTree.parent,
+            folderTreeRequestDto.children.map { it.toFolderTreeEntity() }.toMutableList()
+        )
         return folderTreeRepository.save(folderTree).toFolderTreeResponse()
     }
 
