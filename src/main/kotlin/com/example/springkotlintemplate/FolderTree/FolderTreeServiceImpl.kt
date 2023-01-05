@@ -1,9 +1,6 @@
 package com.example.springkotlintemplate.FolderTree
 
 import com.example.springkotlintemplate.FolderTree.Dto.FolderTreeRequestDto
-import com.example.springkotlintemplate.FolderTree.Dto.FolderTreeResponseDto
-import com.example.springkotlintemplate.FolderTree.Exception.FolderTreeAlreadyExistException
-import com.example.springkotlintemplate.FolderTree.Exception.FolderTreeNotFoundException
 import com.example.springkotlintemplate.FolderTree.Entity.FolderTree
 import org.springframework.stereotype.Service
 
@@ -11,47 +8,28 @@ import org.springframework.stereotype.Service
 class FolderTreeServiceImpl(
     private val folderTreeRepository: FolderTreeRepository
 ): FolderTreeService {
-    override fun create(folderTreeRequestDto: FolderTreeRequestDto): FolderTreeResponseDto {
-        val folderTree=folderTreeRequestDto.toFolderTreeEntity()
-        if(folderTreeRepository.findByName(folderTree.name)!=null){
-            throw FolderTreeAlreadyExistException()
-        }
-        return folderTreeRepository.save(folderTree).toFolderTreeResponse()
-    }
-
-    override fun update(targetId: String, folderTreeRequestDto: FolderTreeRequestDto): FolderTreeResponseDto {
-        val targetFolderTree=folderTreeRepository.findByName(targetId)?: throw FolderTreeNotFoundException()
-        val folderTree=FolderTree(
-            targetFolderTree.id,
-            folderTreeRequestDto.name,
-            targetFolderTree.parent,
-            folderTreeRequestDto.children.map { it.toFolderTreeEntity() }.toMutableList()
-        )
-        return folderTreeRepository.save(folderTree).toFolderTreeResponse()
-    }
-
-    override fun delete(id: String) {
-        folderTreeRepository.findByName(id) ?: throw FolderTreeNotFoundException()
-        folderTreeRepository.deleteByName(id)
-    }
-
-    override fun findAllRootFolder(): List<FolderTreeResponseDto> {
+    override fun findAllRootFolder(): List<FolderTree> {
         return folderTreeRepository.findAllByParentIsNull()
-            .map { it.toFolderTreeResponse() }
-            .toList()
     }
 
-    override fun findByName(id: String): FolderTreeResponseDto? {
-        val result=folderTreeRepository.findByName(id) ?: throw FolderTreeNotFoundException()
-        return result.toFolderTreeResponse()
+    override fun findById(folderId: Long): FolderTree? {
+        return folderTreeRepository.findById(folderId).orElse(null)
     }
 
+    override fun create(folderTree: FolderTreeRequestDto) {
+        folderTreeRepository.save(folderTree.toFolderTreeEntity())
+    }
+
+    override fun update(folderTree: FolderTree) {
+        folderTreeRepository.save(folderTree)
+    }
 
     override fun deleteAll() {
         folderTreeRepository.deleteAll()
     }
 
-    override fun findById(folderId: Long): FolderTreeResponseDto? {
-        return folderTreeRepository.findById(folderId).orElse(null)?.toFolderTreeResponse()
+    override fun deleteById(id: Long) {
+        folderTreeRepository.deleteById(id)
     }
+
 }

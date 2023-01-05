@@ -1,15 +1,14 @@
 package com.example.springkotlintemplate.FolderTree
 
 import com.example.springkotlintemplate.FolderTree.Dto.FolderTreeRequestDto
-import com.example.springkotlintemplate.FolderTree.Dto.FolderTreeResponseDto
+import com.example.springkotlintemplate.FolderTree.Entity.FolderTree
 
 interface FolderTreeService {
-    fun create(folderTree: FolderTreeRequestDto) : FolderTreeResponseDto
-    fun update(targetId : String,folderTree: FolderTreeRequestDto): FolderTreeResponseDto
-    fun delete(id: String)
-    fun findAllRootFolder(): List<FolderTreeResponseDto>
-    fun findByName(id: String): FolderTreeResponseDto?
+    fun findAllRootFolder(): List<FolderTree>
+    fun findById(folderId: Long): FolderTree?
+    fun create(folderTree: FolderTreeRequestDto)
+    fun update(folderTree: FolderTree)
     fun deleteAll()
-    fun findById(folderId: Long): FolderTreeResponseDto?
+    fun deleteById(id: Long)
 
 }

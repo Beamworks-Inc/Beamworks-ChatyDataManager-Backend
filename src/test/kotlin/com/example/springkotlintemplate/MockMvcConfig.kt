@@ -3,7 +3,7 @@ package com.example.springkotlintemplate
 import com.example.springkotlintemplate.Config.RestExceptionHandler.RestControllerAdviceConfig
 import com.example.springkotlintemplate.Contents.ContentsControllerImpl
 import com.example.springkotlintemplate.Contents.ContentsService
-import com.example.springkotlintemplate.FolderTree.FolderTreeController
+import com.example.springkotlintemplate.FolderTree.FolderTreeControllerImpl
 import com.example.springkotlintemplate.FolderTree.FolderTreeService
 import io.mockk.mockk
 import org.springframework.boot.test.context.TestConfiguration
@@ -21,7 +21,7 @@ class MockMvcConfig {
     @Bean
     fun getMockMvc(): MockMvc =
         MockMvcBuilders.standaloneSetup(
-                FolderTreeController(getMockFolderService()),
+                FolderTreeControllerImpl(getMockFolderService()),
                 ContentsControllerImpl(getMockContentService())
             ).setControllerAdvice(RestControllerAdviceConfig())
             .apply<StandaloneMockMvcBuilder>(documentationConfiguration(restDocumentation))
