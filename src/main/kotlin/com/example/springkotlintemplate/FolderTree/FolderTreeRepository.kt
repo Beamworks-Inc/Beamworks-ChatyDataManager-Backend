@@ -1,6 +1,6 @@
 package com.example.springkotlintemplate.FolderTree
 
-import com.example.springkotlintemplate.FolderTree.VO.FolderTree
+import com.example.springkotlintemplate.FolderTree.Entity.FolderTree
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 

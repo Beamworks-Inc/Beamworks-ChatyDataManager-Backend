@@ -1,6 +1,8 @@
 package com.example.springkotlintemplate.FolderTree
 
-import com.example.springkotlintemplate.FolderTree.VO.FolderTree
+import com.example.springkotlintemplate.FolderTree.Dto.FolderTreeRequestDto
+import com.example.springkotlintemplate.FolderTree.Dto.FolderTreeResponseDto
+import com.example.springkotlintemplate.FolderTree.Entity.FolderTree
 import com.example.springkotlintemplate.MockMvcConfig
 import com.google.gson.Gson
 import io.kotest.core.spec.style.DescribeSpec
@@ -32,13 +34,16 @@ class FolderTreeControllerTest(
         restDocumentation.afterTest()
     }
     val URI="/api/v1/folder"
-    val mockFolderTree = FolderTree("root", listOf(
-        FolderTree("child1", listOf())
+    val mockFolderTree = FolderTreeRequestDto("root", mutableListOf(
+        FolderTreeRequestDto("child1", mutableListOf())
+    ))
+    val mockFolderTreeResponse = FolderTreeResponseDto("root", mutableListOf(
+        FolderTreeResponseDto("child1", mutableListOf())
     ))
     describe("FolderTreeController") {
         context("GET /api/folder") {
             it("모든 폴더 트리 리스트를 반환해야한다.") {
-                every { mockService.findAll() } returns listOf(mockFolderTree)
+                every { mockService.findAll() } returns listOf(mockFolderTreeResponse)
                 mockMvc.perform(
                     get(URI)
                 ).andExpect {
@@ -69,7 +74,7 @@ class FolderTreeControllerTest(
         }
         context("POST /api/folder") {
             it("폴더 트리를 만들고 결과를 반환해야한다.") {
-                every { mockService.create(any()) } returns mockFolderTree
+                every { mockService.create(any()) } returns mockFolderTreeResponse
                 mockMvc.perform(
                     post(URI)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -114,7 +119,7 @@ class FolderTreeControllerTest(
         }
         context("PUT /api/folder/{id}") {
             it("업데이트된 폴더 트리를 반환해야한다.") {
-                every { mockService.update(any(), any()) } returns mockFolderTree
+                every { mockService.update(any(), any()) } returns mockFolderTreeResponse
                 mockMvc.perform(
                     put("$URI/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -135,7 +140,7 @@ class FolderTreeControllerTest(
                 ))
             }
             it("폴더 트리 요청 형식이 잘못되었다면, 400 에러와 형식이 잘못되었다는 메시지를 반환해야한다.") {
-                every { mockService.update(any(), any()) } returns mockFolderTree
+                every { mockService.update(any(), any()) } returns mockFolderTreeResponse
                 mockMvc.put("$URI/1") {
                     accept = MediaType.APPLICATION_JSON
                     contentType = MediaType.APPLICATION_JSON

@@ -1,6 +1,6 @@
 package com.example.springkotlintemplate.Contents.VO
 
-import com.example.springkotlintemplate.FolderTree.VO.FolderTree
+import com.example.springkotlintemplate.FolderTree.Entity.FolderTree
 import com.example.springkotlintemplate.User.User
 import java.util.*
 import javax.persistence.ElementCollection
