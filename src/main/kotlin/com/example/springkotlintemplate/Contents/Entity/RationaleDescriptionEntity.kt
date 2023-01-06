@@ -1,12 +1,12 @@
 package com.example.springkotlintemplate.Contents.Entity
 
 import java.net.URL
-import javax.persistence.Embeddable
-import javax.persistence.Id
+import javax.persistence.*
 
-@Embeddable
-class RationaleDescription(
+@Entity
+data class RationaleDescriptionEntity(
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id : Long,
     val description : String,
     val link : URL

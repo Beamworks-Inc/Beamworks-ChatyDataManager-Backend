@@ -20,7 +20,9 @@ class FolderTreeServiceImpl(
         folderTreeRepository.save(folderTree.toFolderTreeEntity())
     }
 
-    override fun update(folderTree: FolderTree) {
+    override fun update(folderTreeId: Long, folderTreeRequestDto: FolderTreeRequestDto) {
+        val folderTree = folderTreeRequestDto.toFolderTreeEntity()
+        folderTree.id = folderTreeId
         folderTreeRepository.save(folderTree)
     }
 

@@ -1,17 +1,16 @@
 package com.example.springkotlintemplate.Contents.Entity
 
-import java.net.URL
 import javax.persistence.*
 
 @Entity
-class Rationale(
+data class Rationale(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id : Long,
     @ElementCollection
-    val URL : List<URL>,
-    @ElementCollection
-    val description : List<RationaleDescription>
+    val URL : MutableList<String>,
+    @OneToMany(cascade = [CascadeType.ALL])
+    val description : MutableList<RationaleDescriptionEntity>
 ){
-    constructor(): this(0, listOf(), listOf())
+    constructor(): this(0, mutableListOf(), mutableListOf())
 }

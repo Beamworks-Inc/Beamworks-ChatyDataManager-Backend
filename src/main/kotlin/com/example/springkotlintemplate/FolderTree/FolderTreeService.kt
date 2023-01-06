@@ -7,7 +7,7 @@ interface FolderTreeService {
     fun findAllRootFolder(): List<FolderTree>
     fun findById(folderId: Long): FolderTree?
     fun create(folderTree: FolderTreeRequestDto)
-    fun update(folderTree: FolderTree)
+    fun update(folderTreeId: Long,folderTreeRequestDto: FolderTreeRequestDto)
     fun deleteAll()
     fun deleteById(id: Long)
 

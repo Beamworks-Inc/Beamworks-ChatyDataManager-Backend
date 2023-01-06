@@ -8,7 +8,7 @@ import javax.persistence.*
 data class FolderTree(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: Long,
+    var id: Long,
     val name : String,
     @JsonBackReference
     @OneToOne(cascade = [CascadeType.ALL])

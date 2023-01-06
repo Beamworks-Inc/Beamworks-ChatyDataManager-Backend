@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.*
 class ContentsControllerImpl(
     val contentsService: ContentsService
 ) : ContentsController {
-    @GetMapping("/{folderId}")
+    @GetMapping("/findAllByFolderId/{folderId}")
     override fun findAllByFolderId( @PathVariable folderId: Long): List<Contents> {
         return contentsService.findAllByFolderId(folderId)
     }
-    @GetMapping("/{contentsId}")
-    override fun findById(@PathVariable contentsId: Long): Contents {
+    @GetMapping("/findByContentsId/{contentsId}")
+    override fun findById(  @PathVariable contentsId: Long): Contents {
         return contentsService.findById(contentsId)
     }
     @PostMapping("")
