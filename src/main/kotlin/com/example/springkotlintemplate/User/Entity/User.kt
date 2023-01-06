@@ -1,4 +1,4 @@
-package com.example.springkotlintemplate.User
+package com.example.springkotlintemplate.User.Entity
 
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue

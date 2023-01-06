@@ -1,9 +1,7 @@
 package com.example.springkotlintemplate.Contents.Entity
 
-import com.example.springkotlintemplate.FolderTree.Entity.FolderTree
-import com.example.springkotlintemplate.User.User
+import com.example.springkotlintemplate.User.Entity.User
 import java.time.LocalDateTime
-import java.util.*
 import javax.persistence.*
 
 @Entity

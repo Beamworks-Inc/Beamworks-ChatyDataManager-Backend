@@ -1,7 +1,7 @@
 package com.example.springkotlintemplate.Config.Security
 
 
-import com.example.springkotlintemplate.User.User
+import com.example.springkotlintemplate.User.Entity.User
 import com.example.springkotlintemplate.User.UserRepository
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest

@@ -1,12 +1,10 @@
 package com.example.springkotlintemplate.Contents.Dto
 
-import com.example.springkotlintemplate.Contents.Entity.Rationale
 import com.example.springkotlintemplate.Contents.Entity.Reference
 import com.example.springkotlintemplate.Contents.Entity.Review
 import com.example.springkotlintemplate.Contents.Entity.ReviewState
-import com.example.springkotlintemplate.User.User
+import com.example.springkotlintemplate.User.Entity.User
 import java.time.LocalDateTime
-import javax.persistence.*
 
 data class ContentsRequestDto (
     val id: Long,
