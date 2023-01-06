@@ -21,7 +21,7 @@ data class Contents(
     val reference : MutableList<Reference>,
     @OneToOne(cascade = [CascadeType.ALL]) val rationale : Rationale,
     val writeDate : LocalDateTime,
-    @OneToOne(cascade = [CascadeType.ALL])
+    @OneToOne(cascade = [CascadeType.DETACH])
     @JoinColumn(name = "user.id")
     val writer : User,
     @ElementCollection val keyword : MutableList<String>,

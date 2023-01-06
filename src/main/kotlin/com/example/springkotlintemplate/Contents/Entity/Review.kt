@@ -7,10 +7,9 @@ import javax.persistence.*
 @Entity
 data class Review(
     @Id
-    @GeneratedValue(strategy = javax.persistence.GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Int,
-    @OneToOne(cascade = [CascadeType.ALL])
-    @JoinColumn(name = "user.id")
+    @OneToOne(cascade = [CascadeType.DETACH])
     val reviewer : User,
     val reviewDate : LocalDateTime,
     val reviewComment : String
