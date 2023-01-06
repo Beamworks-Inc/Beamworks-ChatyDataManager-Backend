@@ -1,34 +1,15 @@
 package com.example.springkotlintemplate.FolderTree
 
-import com.example.springkotlintemplate.FolderTree.VO.FolderTree
-import org.springframework.web.bind.annotation.*
+import com.example.springkotlintemplate.FolderTree.Dto.FolderTreeRequestDto
+import com.example.springkotlintemplate.FolderTree.Entity.FolderTree
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestBody
 
-@RestController
-@RequestMapping("/api/v1/folder")
-class FolderTreeController(private val mockService: FolderTreeService) {
-    @GetMapping("")
-    fun findAllFolderTree(): List<FolderTree> {
-        return mockService.findAll()
-    }
-
-    @GetMapping("/{id}")
-    fun findFolderTreeById( @PathVariable id: String): FolderTree? {
-        return mockService.findById(id)
-    }
-
-    @PostMapping("",  produces = ["application/json"], consumes = ["application/json"])
-    fun createFolderTree(@RequestBody folderTree: FolderTree): FolderTree {
-        return mockService.create(folderTree)
-    }
-
-    @PutMapping("/{rootName}",  produces = ["application/json"], consumes = ["application/json"])
-    fun updateFolderTree(@PathVariable rootName: String, @RequestBody folderTree: FolderTree): FolderTree {
-        return mockService.update(rootName, folderTree)
-    }
-
-    @DeleteMapping("/{id}", produces = ["application/json"])
-    fun deleteFolderTree(@PathVariable id: String) {
-        return mockService.delete(id)
-    }
-
+interface FolderTreeController {
+    fun findAllRootFolder(): List<FolderTree>
+    fun findFolderTreeById(id: Long): FolderTree?
+    fun createFolderTree(folderTree: FolderTreeRequestDto)
+    fun updateFolderTree(@PathVariable id: Long, @RequestBody folderTree: FolderTreeRequestDto)
+    fun deleteFolderTree(id: Long)
+    fun deleteAllFolderTree()
 }

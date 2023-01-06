@@ -1,4 +1,4 @@
-package com.example.springkotlintemplate.Contents.VO
+package com.example.springkotlintemplate.Contents.Entity
 
 enum class ReviewState {
     APPROVED,
