@@ -13,6 +13,13 @@ on:
 
 permissions:
   contents: read
+# Database Setting
+env:
+  AWS_RDS_USER: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_RDS_PWD: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_RDS_ENDPOINT: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+  GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
 
 jobs:
   build:
@@ -26,18 +33,32 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
+
     - name: Build with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
         arguments: clean bootJar -Pprofile=prod
+        
+    - name: Get current time
+      uses: 1466587594/get-current-time@v2
+      id: time
+      with:
+        format: YYYY-MM-DDTHH-mm-ss 
+        utcOffset: "+09:00" 
+        
+    - name: Create Deployment Package
+      run: |
+        mkdir -p deploy
+        mv ./build/libs/*.jar deploy/application.jar
+        cd deploy && zip -r deploy.zip .
     
     - name: Deploy to Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v21
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        application_name: beamworks-platform-dev
-        environment_name: beamworks-platform-dev
-        version_label: 1
-        region: ap-northeast-1
-        deployment_package: build/libs/*.jar
+        application_name: beamworks-platform-server-dev
+        environment_name: Beamworksplatformserverdev-env
+        version_label: ${{steps.time.outputs.formattedTime}}
+        region: ap-northeast-2
+        deployment_package: deploy/deploy.zip
