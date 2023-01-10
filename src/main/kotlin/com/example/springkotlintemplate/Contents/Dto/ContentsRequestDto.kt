@@ -15,7 +15,7 @@ data class ContentsRequestDto (
     val writeDate : LocalDateTime,
     val writer : User,
     val review : Review,
-    val state : ReviewState
+    val status : ReviewState
 ){
     constructor(): this(0,
         1,

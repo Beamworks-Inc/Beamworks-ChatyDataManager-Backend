@@ -25,7 +25,7 @@ data class Contents(
     @ElementCollection val keyword : MutableList<String>,
     @OneToOne(cascade = [CascadeType.ALL])
     val review : Review,
-    val state : ReviewState
+    val status : ReviewState
 ){
     constructor(): this(0,
         1,
