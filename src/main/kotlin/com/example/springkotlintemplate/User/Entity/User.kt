@@ -12,6 +12,7 @@ data class User (
     val id : Long,
     val name : String,
     val email : String,
+    val role : Role?
 ){
-    constructor(): this(0, "","")
+    constructor(): this(0, "","",null)
 }
