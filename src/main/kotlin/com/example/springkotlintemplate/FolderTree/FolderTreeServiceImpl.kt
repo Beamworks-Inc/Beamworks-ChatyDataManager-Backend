@@ -2,6 +2,7 @@ package com.example.springkotlintemplate.FolderTree
 
 import com.example.springkotlintemplate.FolderTree.Dto.FolderTreeRequestDto
 import com.example.springkotlintemplate.FolderTree.Entity.FolderTree
+import com.example.springkotlintemplate.FolderTree.Exception.FolderTreeNotFoundException
 import org.springframework.stereotype.Service
 
 @Service
@@ -21,8 +22,11 @@ class FolderTreeServiceImpl(
     }
 
     override fun update(folderTreeId: Long, folderTreeRequestDto: FolderTreeRequestDto) {
-        val folderTree = folderTreeRequestDto.toFolderTreeEntity()
-        folderTree.id = folderTreeId
+        val targetFolder=findById(folderTreeId) ?:throw FolderTreeNotFoundException()
+        val folderTree = folderTreeRequestDto.toFolderTreeEntity().copy(
+            id = targetFolder.id,
+            parent = targetFolder.parent
+        )
         folderTreeRepository.save(folderTree)
     }
 
