@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody
 interface FolderTreeController {
     fun findAllRootFolder(): List<FolderTree>
     fun findFolderTreeById(id: Long): FolderTree?
-    fun createFolderTree(folderTree: FolderTreeRequestDto)
+    fun createFolderTree(folderTree: FolderTreeRequestDto): FolderTree
     fun updateFolderTree(@PathVariable id: Long, @RequestBody folderTree: FolderTreeRequestDto): FolderTree
     fun deleteFolderTree(id: Long)
     fun deleteAllFolderTree()

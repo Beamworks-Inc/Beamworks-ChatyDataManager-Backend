@@ -14,8 +14,8 @@ class FolderTreeControllerImpl(private val folderTreeService: FolderTreeService)
     override fun findFolderTreeById( @PathVariable id: Long): FolderTree? = folderTreeService.findById(id)
 
     @PostMapping("")
-    override fun createFolderTree(@RequestBody folderTree: FolderTreeRequestDto) {
-        folderTreeService.create(folderTree)
+    override fun createFolderTree(@RequestBody folderTree: FolderTreeRequestDto): FolderTree {
+        return folderTreeService.create(folderTree)
     }
 
     @PutMapping("/{id}")
