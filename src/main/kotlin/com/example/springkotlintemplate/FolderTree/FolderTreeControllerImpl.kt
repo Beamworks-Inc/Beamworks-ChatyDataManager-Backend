@@ -19,8 +19,8 @@ class FolderTreeControllerImpl(private val folderTreeService: FolderTreeService)
     }
 
     @PutMapping("/{id}")
-    override fun updateFolderTree(@PathVariable id: Long,@RequestBody folderTree: FolderTreeRequestDto) {
-        folderTreeService.update(id,folderTree)
+    override fun updateFolderTree(@PathVariable id: Long,@RequestBody folderTree: FolderTreeRequestDto): FolderTree {
+        return folderTreeService.update(id,folderTree)
     }
 
     @DeleteMapping("/{id}")

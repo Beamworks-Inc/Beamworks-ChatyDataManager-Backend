@@ -13,7 +13,7 @@ class FolderTreeServiceImpl(
         return folderTreeRepository.findAllByParentIsNull()
     }
 
-    override fun findById(folderId: Long): FolderTree? {
+        override fun findById(folderId: Long): FolderTree? {
         return folderTreeRepository.findById(folderId).orElse(null)
     }
 
@@ -21,13 +21,14 @@ class FolderTreeServiceImpl(
         folderTreeRepository.save(folderTree.toFolderTreeEntity())
     }
 
-    override fun update(folderTreeId: Long, folderTreeRequestDto: FolderTreeRequestDto) {
+    override fun update(folderTreeId: Long, folderTreeRequestDto: FolderTreeRequestDto): FolderTree {
         val targetFolder=findById(folderTreeId) ?:throw FolderTreeNotFoundException()
         val folderTree = folderTreeRequestDto.toFolderTreeEntity().copy(
             id = targetFolder.id,
             parent = targetFolder.parent
         )
         folderTreeRepository.save(folderTree)
+        return findRootFolder(folderTreeId)
     }
 
     override fun deleteAll() {
@@ -38,4 +39,13 @@ class FolderTreeServiceImpl(
         folderTreeRepository.deleteById(id)
     }
 
+
+    private fun findRootFolder(folderId: Long): FolderTree{
+        val folder = findById(folderId) ?: throw FolderTreeNotFoundException()
+        return if(folder.parent == null){
+            folder
+        } else{
+            findRootFolder(folder.parent.id)
+        }
+    }
 }
