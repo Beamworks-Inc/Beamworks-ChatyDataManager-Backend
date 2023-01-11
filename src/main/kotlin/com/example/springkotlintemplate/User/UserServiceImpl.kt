@@ -1,5 +1,6 @@
 package com.example.springkotlintemplate.User
 
+import com.example.springkotlintemplate.User.Entity.Role
 import com.example.springkotlintemplate.User.Entity.User
 import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
@@ -11,11 +12,11 @@ class UserServiceImpl(
     private val userRepository: UserRepository
 ): UserService {
     override fun getCurrentUserInfo(): User {
-        val userEmail: String=getUserEmail()
+        val userEmail: String=getUserEmailFromSecurityContext()
         return userRepository.findByEmail(userEmail) ?: throw UserNotFoundException()
     }
 
-    override fun getUserEmail(): String {
+    private fun getUserEmailFromSecurityContext(): String {
         val authentication = SecurityContextHolder.getContext().authentication
         if(!(authentication is AnonymousAuthenticationToken)){
             return (authentication.principal as DefaultOAuth2User).attributes["email"] as String
@@ -23,5 +24,10 @@ class UserServiceImpl(
         else {
             throw NotAuthenticateException()
         }
+    }
+
+    override fun updateUserRole(role: Role) {
+        val user: User = getCurrentUserInfo()
+        userRepository.save(user.copy(role = role))
     }
 }
