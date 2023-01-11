@@ -9,7 +9,7 @@ interface FolderTreeController {
     fun findAllRootFolder(): List<FolderTree>
     fun findFolderTreeById(id: Long): FolderTree?
     fun createFolderTree(folderTree: FolderTreeRequestDto)
-    fun updateFolderTree(@PathVariable id: Long, @RequestBody folderTree: FolderTreeRequestDto)
+    fun updateFolderTree(@PathVariable id: Long, @RequestBody folderTree: FolderTreeRequestDto): FolderTree
     fun deleteFolderTree(id: Long)
     fun deleteAllFolderTree()
 }
