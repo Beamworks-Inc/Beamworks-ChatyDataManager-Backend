@@ -9,6 +9,7 @@ data class RationaleDescriptionEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id : Long,
     val description : String,
+    @Column(length = 1000)
     val link : URL
 ) {
     constructor() : this(0, "", URL("http://www.example.com"))

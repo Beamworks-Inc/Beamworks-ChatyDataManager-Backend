@@ -11,6 +11,7 @@ data class Review(
     @OneToOne(cascade = [CascadeType.DETACH])
     val reviewer : User,
     val reviewDate : LocalDateTime,
+    @Column(length = 1000)
     val reviewComment : String
 ){
     constructor(): this(0, User(), LocalDateTime.now(), "")

@@ -13,7 +13,9 @@ data class Contents(
     @Column(name = "folder_id")
     @JoinColumn(name = "folder_tree.id")
     val folderId : Long,
+    @Column(length = 1000)
     val question : String,
+    @Column(length = 1000)
     val answer : String,
     @OneToMany(cascade = [CascadeType.ALL])
     val reference : MutableList<Reference>,
