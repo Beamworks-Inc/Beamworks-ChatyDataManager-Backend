@@ -24,11 +24,15 @@ class FolderTreeServiceImpl(
 
     override fun update(folderTreeId: Long, folderTreeRequestDto: FolderTreeRequestDto): FolderTree {
         val targetFolder=findById(folderTreeId) ?:throw FolderTreeNotFoundException()
-        val folderTree = folderTreeRequestDto.toFolderTreeEntity().copy(
-            id = targetFolder.id,
-            parent = targetFolder.parent
-        )
-        folderTreeRepository.save(folderTree)
+        if(targetFolder.parent==null){
+            folderTreeRepository.deleteById(folderTreeId)
+            folderTreeRepository.save(folderTreeRequestDto.toFolderTreeEntity())
+        }
+        else{
+            targetFolder.parent.children.remove(targetFolder)
+            targetFolder.parent.children.add(folderTreeRequestDto.toFolderTreeEntity(targetFolder.parent))
+            folderTreeRepository.save(targetFolder.parent)
+        }
         return findRootFolder(folderTreeId)
     }
 

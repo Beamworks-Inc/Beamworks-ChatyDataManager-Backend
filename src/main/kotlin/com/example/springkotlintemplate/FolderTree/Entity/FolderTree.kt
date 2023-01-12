@@ -11,7 +11,7 @@ data class FolderTree(
     var id: Long,
     val name : String,
     @JsonBackReference
-    @OneToOne(cascade = [CascadeType.ALL])
+    @ManyToOne(cascade = [CascadeType.ALL])
     val parent : FolderTree?,
     @OneToMany(cascade = [CascadeType.ALL])
     var children : MutableList<FolderTree>
