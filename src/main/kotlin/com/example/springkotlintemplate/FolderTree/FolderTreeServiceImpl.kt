@@ -26,7 +26,8 @@ class FolderTreeServiceImpl(
         val targetFolder=findById(folderTreeId) ?:throw FolderTreeNotFoundException()
         if(targetFolder.parent==null){
             folderTreeRepository.deleteById(folderTreeId)
-            folderTreeRepository.save(folderTreeRequestDto.toFolderTreeEntity())
+            return folderTreeRepository.save(folderTreeRequestDto.toFolderTreeEntity())
+
         }
         else{
             targetFolder.parent.children.remove(targetFolder)
