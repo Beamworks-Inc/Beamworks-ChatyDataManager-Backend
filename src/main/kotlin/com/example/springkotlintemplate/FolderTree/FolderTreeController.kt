@@ -9,7 +9,12 @@ interface FolderTreeController {
     fun findAllRootFolder(): List<FolderTree>
     fun findFolderTreeById(id: Long): FolderTree?
     fun createFolderTree(folderTree: FolderTreeRequestDto): FolderTree
-    fun updateFolderTree(@PathVariable id: Long, @RequestBody folderTree: FolderTreeRequestDto): FolderTree
+    fun changeName(@PathVariable id: Long, @PathVariable name: String): FolderTree
+    fun addChild(@PathVariable parentId : Long, @PathVariable childName : String): FolderTree
+
+    /**
+     * 하위 폴더 트리도 모두 삭제하도록 함
+     */
     fun deleteFolderTree(id: Long)
     fun deleteAllFolderTree()
 }
