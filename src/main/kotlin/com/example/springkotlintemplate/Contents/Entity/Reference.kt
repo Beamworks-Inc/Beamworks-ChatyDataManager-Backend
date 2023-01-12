@@ -1,12 +1,7 @@
 package com.example.springkotlintemplate.Contents.Entity
 
 import java.net.URL
-import javax.persistence.Embeddable
-import javax.persistence.EmbeddedId
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 class Reference(
@@ -14,7 +9,9 @@ class Reference(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id : Long,
     val title : String,
+    @Column(length = 1000)
     val description : String,
+    @Column(length = 1000)
     val link : URL
 ){
     constructor(): this(0, "", "", URL("http://www.example.com"))
