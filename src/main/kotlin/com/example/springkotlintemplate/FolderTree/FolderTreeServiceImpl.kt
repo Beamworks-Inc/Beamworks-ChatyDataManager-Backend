@@ -22,20 +22,6 @@ class FolderTreeServiceImpl(
         return folderTreeRepository.save(folderTree)
     }
 
-    override fun update(folderTreeId: Long, folderTreeRequestDto: FolderTreeRequestDto): FolderTree {
-        val targetFolder=findById(folderTreeId) ?:throw FolderTreeNotFoundException()
-        if(targetFolder.parent==null){
-            folderTreeRepository.deleteById(folderTreeId)
-            return folderTreeRepository.save(folderTreeRequestDto.toFolderTreeEntity())
-
-        }
-        else{
-            targetFolder.parent.children.remove(targetFolder)
-            targetFolder.parent.children.add(folderTreeRequestDto.toFolderTreeEntity(targetFolder.parent))
-            folderTreeRepository.save(targetFolder.parent)
-        }
-        return findRootFolder(folderTreeId)
-    }
 
     override fun deleteAll() {
         folderTreeRepository.deleteAll()
@@ -43,6 +29,18 @@ class FolderTreeServiceImpl(
 
     override fun deleteById(id: Long) {
         folderTreeRepository.deleteById(id)
+    }
+
+    override fun changeName(name: String, id: Long): FolderTree {
+        val folderTree: FolderTree=folderTreeRepository.findById(id).orElseThrow { FolderTreeNotFoundException() }
+        return folderTreeRepository.save(folderTree.copy(name = name))
+    }
+
+    override fun addChild(childName: String, parentId: Long): FolderTree {
+        val parentFolderTree: FolderTree=folderTreeRepository.findById(parentId).orElseThrow { FolderTreeNotFoundException() }
+        val childFolderTree=FolderTree(0,childName,parentFolderTree, mutableListOf())
+        parentFolderTree.children.add(childFolderTree)
+        return folderTreeRepository.save(parentFolderTree)
     }
 
 
