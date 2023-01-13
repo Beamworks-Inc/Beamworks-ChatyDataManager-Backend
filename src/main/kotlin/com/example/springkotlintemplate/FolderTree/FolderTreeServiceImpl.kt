@@ -43,7 +43,9 @@ class FolderTreeServiceImpl(
 
     override fun changeName(name: String, id: Long): FolderTree {
         val folderTree: FolderTree=folderTreeRepository.findById(id).orElseThrow { FolderTreeNotFoundException() }
-        return folderTreeRepository.save(folderTree.copy(name = name))
+        val root=folderTree.getRoot()
+        folderTreeRepository.save(folderTree.copy(name = name))
+        return root
     }
 
     override fun addChild(childName: String, parentId: Long): FolderTree {
