@@ -28,7 +28,15 @@ class FolderTreeServiceImpl(
     }
 
     override fun deleteById(id: Long) {
-        folderTreeRepository.deleteById(id)
+        val folderTree=folderTreeRepository.findById(id).orElseThrow { FolderTreeNotFoundException() }
+        if(folderTree.parent==null){
+            folderTreeRepository.deleteById(id)
+        }
+        else{
+            folderTree.parent.children.remove(folderTree)
+            folderTreeRepository.save(folderTree.copy(parent = null))
+            folderTreeRepository.deleteById(id)
+        }
     }
 
     override fun changeName(name: String, id: Long): FolderTree {
