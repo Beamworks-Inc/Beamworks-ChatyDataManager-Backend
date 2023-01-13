@@ -16,6 +16,7 @@ data class FolderTree(
     @OneToMany(cascade = [CascadeType.ALL])
     var children : MutableList<FolderTree>
 ){
+
     constructor() : this(1,"", null,mutableListOf())
 
 }

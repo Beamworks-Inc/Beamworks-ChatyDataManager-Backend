@@ -28,8 +28,8 @@ class FolderTreeControllerImpl(private val folderTreeService: FolderTreeService)
 
 
     @DeleteMapping("/{id}")
-    override fun deleteFolderTree(@PathVariable id: Long) {
-        folderTreeService.deleteById(id)
+    override fun deleteFolderTree(@PathVariable id: Long): FolderTree? {
+        return folderTreeService.deleteById(id)
     }
 
     @DeleteMapping("")

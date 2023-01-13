@@ -27,15 +27,17 @@ class FolderTreeServiceImpl(
         folderTreeRepository.deleteAll()
     }
 
-    override fun deleteById(id: Long) {
+    override fun deleteById(id: Long): FolderTree? {
         val folderTree=folderTreeRepository.findById(id).orElseThrow { FolderTreeNotFoundException() }
-        if(folderTree.parent==null){
+        return if(folderTree.parent==null){
             folderTreeRepository.deleteById(id)
-        }
-        else{
+            null
+        } else{
             folderTree.parent.children.remove(folderTree)
+            val root=folderTree.parent.getRoot()
             folderTreeRepository.save(folderTree.copy(parent = null))
             folderTreeRepository.deleteById(id)
+            root
         }
     }
 
@@ -48,7 +50,8 @@ class FolderTreeServiceImpl(
         val parentFolderTree: FolderTree=folderTreeRepository.findById(parentId).orElseThrow { FolderTreeNotFoundException() }
         val childFolderTree=FolderTree(0,childName,parentFolderTree, mutableListOf())
         parentFolderTree.children.add(childFolderTree)
-        return folderTreeRepository.save(parentFolderTree)
+        folderTreeRepository.save(parentFolderTree)
+        return parentFolderTree.getRoot()
     }
 
 
@@ -59,5 +62,10 @@ class FolderTreeServiceImpl(
         } else{
             findRootFolder(folder.parent.id)
         }
+    }
+
+    private fun FolderTree.getRoot(): FolderTree {
+        if(parent == null) return this
+        return parent.getRoot()
     }
 }
