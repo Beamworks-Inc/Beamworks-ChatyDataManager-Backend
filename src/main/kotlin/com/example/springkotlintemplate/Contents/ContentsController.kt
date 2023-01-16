@@ -8,5 +8,6 @@ interface ContentsController {
     fun delete(contentsId : Long)
     fun findAllByFolderId(folderId : Long): List<Contents>
     fun findById(contentsId : Long): Contents
+    fun uploadValidateContents()
 
 }

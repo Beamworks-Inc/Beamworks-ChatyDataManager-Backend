@@ -19,7 +19,8 @@ data class Contents(
     val answer : String,
     @OneToMany(cascade = [CascadeType.ALL])
     val reference : MutableList<Reference>,
-    @OneToOne(cascade = [CascadeType.ALL]) val rationale : Rationale,
+    @OneToOne(cascade = [CascadeType.ALL])
+    val rationale : Rationale,
     val writeDate : LocalDateTime,
     @OneToOne(cascade = [CascadeType.DETACH])
     @JoinColumn(name = "user.id")

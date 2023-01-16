@@ -8,5 +8,6 @@ interface ContentsService {
     fun update(targetContentsId: Long, contents: Contents)
     fun delete(targetContentsId: Long)
     fun findById(contentsId: Long): Contents
+    fun uploadValidateContents()
 
 }

@@ -16,6 +16,12 @@ class ContentsControllerImpl(
     override fun findById(  @PathVariable contentsId: Long): Contents {
         return contentsService.findById(contentsId)
     }
+
+    @PostMapping("/updateApprovedDataToChatBot")
+    override fun uploadValidateContents() {
+        contentsService.uploadValidateContents()
+    }
+
     @PostMapping("")
     override fun create(@RequestBody contents: Contents) {
         contentsService.create(contents)
