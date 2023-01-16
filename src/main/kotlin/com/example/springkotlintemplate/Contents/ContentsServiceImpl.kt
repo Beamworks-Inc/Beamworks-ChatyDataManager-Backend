@@ -21,8 +21,15 @@ class ContentsServiceImpl(
     }
 
     override fun create(content: Contents) {
+        checkIsValidContent(content)
         folderTreeService.findById(content.folderId)?: throw FolderTreeNotFoundException()
         contentsRepository.save(content)
+    }
+
+    private fun checkIsValidContent(content: Contents) {
+        if(content.answer.isEmpty() || content.question.isEmpty()){
+            throw IllegalArgumentException("answer or question is empty")
+        }
     }
 
     override fun update(targetContentsId: Long, contents: Contents) {
@@ -45,8 +52,7 @@ class ContentsServiceImpl(
     }
 
     override fun uploadValidateContents() {
-        val a= getValidateContents()
-        getValidateContents().map { LexUpdateDto(it.question,it.answer) }.forEach(lexService::updateQnA)
+        lexService.updateQnA(getValidateContents().map { LexUpdateDto(it.id,it.question,it.answer) })
     }
 
     private fun getValidateContents(): List<Contents> {
