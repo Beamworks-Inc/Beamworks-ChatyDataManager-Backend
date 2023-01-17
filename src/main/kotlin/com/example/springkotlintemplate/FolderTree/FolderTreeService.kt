@@ -11,5 +11,6 @@ interface FolderTreeService {
     fun deleteById(id: Long): FolderTree?
     fun changeName(name: String, id: Long): FolderTree
     fun addChild(childName: String, parentId: Long): FolderTree
+    fun addSiblingsFromRoot(siblingNames: List<String>)
 
 }

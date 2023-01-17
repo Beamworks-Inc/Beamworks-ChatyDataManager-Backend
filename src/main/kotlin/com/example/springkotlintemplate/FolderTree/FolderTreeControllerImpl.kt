@@ -17,6 +17,11 @@ class FolderTreeControllerImpl(private val folderTreeService: FolderTreeService)
     override fun createFolderTree(@RequestBody folderTree: FolderTreeRequestDto): FolderTree {
         return folderTreeService.create(folderTree)
     }
+
+    @PostMapping("/appendSiblingsFromRoot")
+    override fun appendSiblingFromRoot(@RequestBody siblingNames: List<String>) {
+        folderTreeService.addSiblingsFromRoot(siblingNames)
+    }
     @PutMapping("/changeName/{id}/{name}")
     override fun changeName(@PathVariable id: Long, @PathVariable name: String): FolderTree {
         return folderTreeService.changeName(name,id)
@@ -26,11 +31,11 @@ class FolderTreeControllerImpl(private val folderTreeService: FolderTreeService)
         return folderTreeService.addChild(childName,parentId)
     }
 
-
     @DeleteMapping("/{id}")
     override fun deleteFolderTree(@PathVariable id: Long): FolderTree? {
         return folderTreeService.deleteById(id)
     }
+
 
     @DeleteMapping("")
     override fun deleteAllFolderTree() {

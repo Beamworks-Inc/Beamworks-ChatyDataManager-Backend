@@ -56,6 +56,26 @@ class FolderTreeServiceImpl(
         return parentFolderTree.getRoot()
     }
 
+    override fun addSiblingsFromRoot(siblingNames: List<String>) {
+        val root= findAllRootFolder().first()
+        root.checkHasChildOrAppend(siblingNames)
+        folderTreeRepository.save(root)
+    }
+
+    private fun FolderTree.checkHasChildOrAppend(siblingNames: List<String>) {
+        if(siblingNames.isEmpty()){
+            return
+        }
+        if(siblingNames[0] in children.map { it.name }){
+            val child= children.first { it.name == siblingNames[0] }
+            child.checkHasChildOrAppend(siblingNames.drop(1))
+        } else{
+            val child=FolderTree(0,siblingNames[0],this, mutableListOf())
+            children.add(child)
+            child.checkHasChildOrAppend(siblingNames.drop(1))
+        }
+    }
+
 
     private fun findRootFolder(folderId: Long): FolderTree{
         val folder = findById(folderId) ?: throw FolderTreeNotFoundException()
@@ -71,3 +91,4 @@ class FolderTreeServiceImpl(
         return parent.getRoot()
     }
 }
+

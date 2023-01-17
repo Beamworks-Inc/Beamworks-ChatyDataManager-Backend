@@ -11,6 +11,8 @@ interface FolderTreeController {
     fun changeName(@PathVariable id: Long, @PathVariable name: String): FolderTree
     fun addChild(@PathVariable parentId : Long, @PathVariable childName : String): FolderTree
 
+    fun appendSiblingFromRoot( siblingName : List<String>)
+
     /**
      * 하위 폴더 트리도 모두 삭제하도록 함
      */
