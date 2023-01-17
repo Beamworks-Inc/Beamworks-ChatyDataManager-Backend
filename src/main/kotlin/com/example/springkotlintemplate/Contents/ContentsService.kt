@@ -1,5 +1,6 @@
 package com.example.springkotlintemplate.Contents
 
+import com.example.springkotlintemplate.Contents.Dto.KeywordDto
 import com.example.springkotlintemplate.Contents.Entity.Contents
 
 interface ContentsService {
@@ -9,8 +10,8 @@ interface ContentsService {
     fun delete(targetContentsId: Long)
     fun findById(contentsId: Long): Contents
     fun uploadValidateContents()
-    fun findAllKeywordList(): List<String>
-    fun findAllReviewerKeywordList(): List<String>
+    fun findAllKeywordList(): List<KeywordDto>
+    fun findAllReviewerKeywordList(): List<KeywordDto>
     fun findAllContentsContainKeyword(keyword: List<String>): List<Contents>
     fun findAllContentsContainReviewerKeyword(keyword: List<String>): List<Contents>
     fun findAllContentsContainKeywordAndReviewerKeyword(

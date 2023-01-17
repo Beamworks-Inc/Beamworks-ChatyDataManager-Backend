@@ -1,5 +1,6 @@
 package com.example.springkotlintemplate.Contents
 
+import com.example.springkotlintemplate.Contents.Dto.KeywordDto
 import com.example.springkotlintemplate.Contents.Entity.Contents
 import org.springframework.web.bind.annotation.*
 
@@ -23,12 +24,12 @@ class ContentsControllerImpl(
     }
 
     @GetMapping("/findAllKeywordList")
-    override fun findAllKeywordList(): List<String> {
+    override fun findAllKeywordList(): List<KeywordDto> {
         return contentsService.findAllKeywordList()
     }
 
     @GetMapping("/findAllReviewerKeywordList")
-    override fun findAllReviewerKeywordList(): List<String> {
+    override fun findAllReviewerKeywordList(): List<KeywordDto>{
         return contentsService.findAllReviewerKeywordList()
     }
     @GetMapping("/findAllContentsContainKeyword")

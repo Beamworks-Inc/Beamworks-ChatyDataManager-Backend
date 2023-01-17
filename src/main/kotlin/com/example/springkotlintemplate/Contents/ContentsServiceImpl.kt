@@ -1,5 +1,6 @@
 package com.example.springkotlintemplate.Contents
 
+import com.example.springkotlintemplate.Contents.Dto.KeywordDto
 import com.example.springkotlintemplate.Contents.Exception.ContentsNotFoundException
 import com.example.springkotlintemplate.Contents.Entity.Contents
 import com.example.springkotlintemplate.Contents.Entity.ReviewState
@@ -53,12 +54,14 @@ class ContentsServiceImpl(
         lexService.updateQnA(getValidateContents().map { LexUpdateDto(it.id,it.question,it.answer) })
     }
 
-    override fun findAllKeywordList(): List<String> {
-        return contentsRepository.findAllKeywordList()
+    override fun findAllKeywordList(): List<KeywordDto> {
+        return contentsRepository.findAllKeywordList().groupBy { it }
+            .map { KeywordDto(it.key, it.value.size) }
     }
 
-    override fun findAllReviewerKeywordList(): List<String> {
-        return contentsRepository.findAllReviewerKeywordList()
+    override fun findAllReviewerKeywordList(): List<KeywordDto> {
+        return contentsRepository.findAllReviewerKeywordList().groupBy { it }
+            .map { KeywordDto(it.key, it.value.size) }
     }
 
     override fun findAllContentsContainKeyword(keyword: List<String>): List<Contents> {

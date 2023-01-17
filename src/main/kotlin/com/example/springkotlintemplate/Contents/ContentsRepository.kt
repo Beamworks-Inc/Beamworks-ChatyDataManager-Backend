@@ -13,10 +13,10 @@ interface ContentsRepository: CrudRepository<Contents,Long> {
 
     fun findAllByStatusIs(status: ReviewState): List<Contents>
 
-    @Query(value = "SELECT DISTINCT keyword FROM contents_keyword", nativeQuery = true)
+    @Query(value = "SELECT keyword FROM contents_keyword", nativeQuery = true)
     fun findAllKeywordList(): List<String>
 
-    @Query(value = "SELECT DISTINCT reviewer_keyword FROM contents", nativeQuery = true)
+    @Query(value = "SELECT reviewer_keyword FROM contents", nativeQuery = true)
     fun findAllReviewerKeywordList(): List<String>
 
     fun findDistinctByKeywordIn(keyword: List<String>): List<Contents>
