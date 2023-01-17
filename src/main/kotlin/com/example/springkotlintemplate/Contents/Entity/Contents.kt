@@ -25,7 +25,9 @@ data class Contents(
     @OneToOne(cascade = [CascadeType.DETACH])
     @JoinColumn(name = "user.id")
     val writer : User,
-    @ElementCollection val keyword : MutableList<String>,
+    @ElementCollection
+    val keyword : MutableList<String>,
+    val reviewerKeyword : String,
     @OneToOne(cascade = [CascadeType.ALL])
     val review : Review,
     val status : ReviewState
@@ -39,6 +41,7 @@ data class Contents(
         LocalDateTime.now(),
         User(),
         mutableListOf(),
+        "",
         Review(),
         ReviewState.DRAFT
     )

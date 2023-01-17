@@ -22,6 +22,33 @@ class ContentsControllerImpl(
         contentsService.uploadValidateContents()
     }
 
+    @GetMapping("/findAllKeywordList")
+    override fun findAllKeywordList(): List<String> {
+        return contentsService.findAllKeywordList()
+    }
+
+    @GetMapping("/findAllReviewerKeywordList")
+    override fun findAllReviewerKeywordList(): List<String> {
+        return contentsService.findAllReviewerKeywordList()
+    }
+    @GetMapping("/findAllContentsContainKeyword")
+    override fun findAllContentsContainKeyword(@RequestBody keyword: List<String>): List<Contents> {
+        return contentsService.findAllContentsContainKeyword(keyword)
+    }
+    @GetMapping("/findAllContentsContainReviewerKeyword")
+    override fun findAllContentsContainReviewerKeyword(@RequestBody keyword: List<String>): List<Contents> {
+        return contentsService.findAllContentsContainReviewerKeyword(keyword)
+    }
+
+    @GetMapping("/findAllContentsContainKeywordAndReviewerKeyword")
+    override fun findAllContentsContainKeywordAndReviewerKeyword(
+        @RequestBody keyword: List<String>,
+        @RequestBody reviewerKeyword: List<String>,
+    ): List<Contents> {
+        return contentsService.findAllContentsContainKeywordAndReviewerKeyword(keyword, reviewerKeyword)
+    }
+
+
     @PostMapping("")
     override fun create(@RequestBody contents: Contents) {
         contentsService.create(contents)

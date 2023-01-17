@@ -3,7 +3,6 @@ package com.example.springkotlintemplate.Contents
 import com.example.springkotlintemplate.Contents.Exception.ContentsNotFoundException
 import com.example.springkotlintemplate.Contents.Entity.Contents
 import com.example.springkotlintemplate.Contents.Entity.ReviewState
-import com.example.springkotlintemplate.FolderTree.Exception.FolderTreeNotFoundException
 import com.example.springkotlintemplate.FolderTree.FolderTreeService
 import com.example.springkotlintemplate.Lex.Dto.LexUpdateDto
 import com.example.springkotlintemplate.Lex.LexService
@@ -22,7 +21,6 @@ class ContentsServiceImpl(
 
     override fun create(content: Contents) {
         checkIsValidContent(content)
-        folderTreeService.findById(content.folderId)?: throw FolderTreeNotFoundException()
         contentsRepository.save(content)
     }
 
@@ -53,6 +51,35 @@ class ContentsServiceImpl(
 
     override fun uploadValidateContents() {
         lexService.updateQnA(getValidateContents().map { LexUpdateDto(it.id,it.question,it.answer) })
+    }
+
+    override fun findAllKeywordList(): List<String> {
+        return contentsRepository.findAllKeywordList()
+    }
+
+    override fun findAllReviewerKeywordList(): List<String> {
+        return contentsRepository.findAllReviewerKeywordList()
+    }
+
+    override fun findAllContentsContainKeyword(keyword: List<String>): List<Contents> {
+        return contentsRepository.findDistinctByKeywordIn(keyword).filter {
+            it.keyword.containsAll(keyword)
+        }
+    }
+
+    override fun findAllContentsContainReviewerKeyword(keyword: List<String>): List<Contents> {
+        return contentsRepository.findDistinctByReviewerKeywordIn(keyword)
+    }
+
+    override fun findAllContentsContainKeywordAndReviewerKeyword(
+        keyword: List<String>,
+        reviewerKeyword: List<String>,
+    ): List<Contents> {
+        return contentsRepository.findDistinctByKeywordIn(keyword).filter {
+            it.keyword.containsAll(keyword)
+        }.filter {content ->
+            reviewerKeyword.any { it == content.reviewerKeyword }
+        }
     }
 
     private fun getValidateContents(): List<Contents> {
