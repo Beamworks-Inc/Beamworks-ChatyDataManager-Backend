@@ -32,11 +32,11 @@ class ContentsControllerImpl(
     override fun findAllReviewerKeywordList(): List<KeywordDto>{
         return contentsService.findAllReviewerKeywordList()
     }
-    @GetMapping("/findAllContentsContainKeyword")
+    @PostMapping("/findAllContentsContainKeyword")
     override fun findAllContentsContainKeyword(@RequestBody keyword: List<String>): List<Contents> {
         return contentsService.findAllContentsContainKeyword(keyword)
     }
-    @GetMapping("/findAllContentsContainReviewerKeyword")
+    @PostMapping("/findAllContentsContainReviewerKeyword")
     override fun findAllContentsContainReviewerKeyword(@RequestBody keyword: List<String>): List<Contents> {
         return contentsService.findAllContentsContainReviewerKeyword(keyword)
     }
