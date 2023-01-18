@@ -21,14 +21,7 @@ class ContentsServiceImpl(
     }
 
     override fun create(content: Contents) {
-        checkIsValidContent(content)
         contentsRepository.save(content)
-    }
-
-    private fun checkIsValidContent(content: Contents) {
-        if(content.answer.isEmpty() || content.question.isEmpty()){
-            throw IllegalArgumentException("answer or question is empty")
-        }
     }
 
     override fun update(targetContentsId: Long, contents: Contents) {
