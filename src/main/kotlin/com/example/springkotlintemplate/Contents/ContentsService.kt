@@ -19,4 +19,6 @@ interface ContentsService {
         reviewerKeyword: List<String>,
     ): List<Contents>
 
+    fun deleteAllContents()
+
 }

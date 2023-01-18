@@ -85,6 +85,10 @@ class ContentsServiceImpl(
         }
     }
 
+    override fun deleteAllContents() {
+        contentsRepository.deleteAll()
+    }
+
     private fun getValidateContents(): List<Contents> {
         return contentsRepository.findAllByStatusIs(ReviewState.APPROVED)
     }

@@ -7,6 +7,8 @@ interface ContentsController {
     fun create(contents : Contents)
     fun update(contents : Contents)
     fun delete(contentsId : Long)
+
+    fun deleteAllContents()
     fun findAllByFolderId(folderId : Long): List<Contents>
     fun findById(contentsId : Long): Contents
     fun uploadValidateContents()
