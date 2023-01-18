@@ -63,6 +63,7 @@ class ContentsControllerImpl(
         contentsService.delete(contentsId)
     }
 
+    @DeleteMapping("/deleteAllContents")
     override fun deleteAllContents() {
         contentsService.deleteAllContents()
     }
