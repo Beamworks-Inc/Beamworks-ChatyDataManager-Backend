@@ -15,7 +15,7 @@ data class Contents(
     val folderId : Long,
     @Column(length = 1000)
     val question : String,
-    @Column(length = 2000)
+    @Column(length = 10000)
     val answer : String,
     @OneToMany(cascade = [CascadeType.ALL])
     val reference : MutableList<Reference>,
