@@ -14,19 +14,28 @@ class FolderTreeControllerImpl(private val folderTreeService: FolderTreeService)
     override fun findFolderTreeById( @PathVariable id: Long): FolderTree? = folderTreeService.findById(id)
 
     @PostMapping("")
-    override fun createFolderTree(@RequestBody folderTree: FolderTreeRequestDto) {
-        folderTreeService.create(folderTree)
+    override fun createFolderTree(@RequestBody folderTree: FolderTreeRequestDto): FolderTree {
+        return folderTreeService.create(folderTree)
     }
 
-    @PutMapping("/{id}")
-    override fun updateFolderTree(@PathVariable id: Long,@RequestBody folderTree: FolderTreeRequestDto) {
-        folderTreeService.update(id,folderTree)
+    @PostMapping("/appendSiblingsFromRoot")
+    override fun appendSiblingFromRoot(@RequestBody siblingNames: List<String>) {
+        folderTreeService.addSiblingsFromRoot(siblingNames)
+    }
+    @PutMapping("/changeName/{id}/{name}")
+    override fun changeName(@PathVariable id: Long, @PathVariable name: String): FolderTree {
+        return folderTreeService.changeName(name,id)
+    }
+    @PutMapping("/addChild/{parentId}/{childName}")
+    override fun addChild(@PathVariable parentId: Long, @PathVariable childName: String): FolderTree {
+        return folderTreeService.addChild(childName,parentId)
     }
 
     @DeleteMapping("/{id}")
-    override fun deleteFolderTree(@PathVariable id: Long) {
-        folderTreeService.deleteById(id)
+    override fun deleteFolderTree(@PathVariable id: Long): FolderTree? {
+        return folderTreeService.deleteById(id)
     }
+
 
     @DeleteMapping("")
     override fun deleteAllFolderTree() {

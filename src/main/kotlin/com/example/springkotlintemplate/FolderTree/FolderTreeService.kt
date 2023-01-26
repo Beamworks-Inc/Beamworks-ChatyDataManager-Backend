@@ -6,9 +6,11 @@ import com.example.springkotlintemplate.FolderTree.Entity.FolderTree
 interface FolderTreeService {
     fun findAllRootFolder(): List<FolderTree>
     fun findById(folderId: Long): FolderTree?
-    fun create(folderTree: FolderTreeRequestDto)
-    fun update(folderTreeId: Long,folderTreeRequestDto: FolderTreeRequestDto)
+    fun create(folderTree: FolderTreeRequestDto): FolderTree
     fun deleteAll()
-    fun deleteById(id: Long)
+    fun deleteById(id: Long): FolderTree?
+    fun changeName(name: String, id: Long): FolderTree
+    fun addChild(childName: String, parentId: Long): FolderTree
+    fun addSiblingsFromRoot(siblingNames: List<String>)
 
 }

@@ -22,6 +22,7 @@ spring:
     database: mysql
 server:
   port: 8080
+LEX_API_KEY : ${LEX_API_KEY}
 ---
 spring:
   config:
@@ -47,4 +48,6 @@ spring:
               - profile
 server:
   port: 5000
+
+LEX_API_KEY : ${LEX_API_KEY}
 

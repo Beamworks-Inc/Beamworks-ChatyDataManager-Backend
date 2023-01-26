@@ -13,16 +13,21 @@ data class Contents(
     @Column(name = "folder_id")
     @JoinColumn(name = "folder_tree.id")
     val folderId : Long,
+    @Column(length = 1000)
     val question : String,
+    @Column(length = 10000)
     val answer : String,
     @OneToMany(cascade = [CascadeType.ALL])
     val reference : MutableList<Reference>,
-    @OneToOne(cascade = [CascadeType.ALL]) val rationale : Rationale,
+    @OneToOne(cascade = [CascadeType.ALL])
+    val rationale : Rationale,
     val writeDate : LocalDateTime,
     @OneToOne(cascade = [CascadeType.DETACH])
     @JoinColumn(name = "user.id")
     val writer : User,
-    @ElementCollection val keyword : MutableList<String>,
+    @ElementCollection
+    val keyword : MutableList<String>,
+    val reviewerKeyword : String,
     @OneToOne(cascade = [CascadeType.ALL])
     val review : Review,
     val status : ReviewState
@@ -36,6 +41,7 @@ data class Contents(
         LocalDateTime.now(),
         User(),
         mutableListOf(),
+        "",
         Review(),
         ReviewState.DRAFT
     )

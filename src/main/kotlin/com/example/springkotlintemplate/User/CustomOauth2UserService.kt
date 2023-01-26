@@ -22,7 +22,11 @@ class CustomOauth2UserService(
         val email: String = oAuth2User.attributes["email"] as String
         val userNameAttributeName = userRequest!!.clientRegistration.providerDetails
             .userInfoEndpoint.userNameAttributeName
-        updateUser(User(0, name, email))
+
+        if(isUserNotExist(email)){
+            userRepository.save(User(0, name, email,null))
+        }
+
         return DefaultOAuth2User(
             oAuth2User.authorities,
             oAuth2User.attributes,
@@ -30,14 +34,9 @@ class CustomOauth2UserService(
         )
     }
 
-    private fun updateUser(newUser: User) {
-        val user= userRepository.findByEmail(newUser.email)
-        if(user == null){
-            userRepository.save(newUser)
-        }
-        else{
-            userRepository.save(newUser.copy(id = user.id))
-        }
+    private fun isUserNotExist(email : String): Boolean {
+        return userRepository.findByEmail(email) == null
     }
+
 
 }
