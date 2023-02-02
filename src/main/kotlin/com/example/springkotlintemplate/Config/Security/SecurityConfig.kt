@@ -1,6 +1,7 @@
 package com.example.springkotlintemplate.Config.Security
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.http.HttpStatus
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -18,6 +19,9 @@ class SecurityConfig(
     val PUBLIC_URL= arrayOf("/login","/api/v1/**")
     val PRIVATE_URL= arrayOf("/api/v2/**")
 
+    @Value("\${spring.web.logout.success-url}")
+    lateinit var logoutSuccessUrl: String
+
     @Bean
     fun filterChain(httpSecurity: HttpSecurity): SecurityFilterChain{
         httpSecurity
@@ -25,6 +29,7 @@ class SecurityConfig(
             .httpBasic().disable()
             .setAuthorizeHttpRequest()
             .setOAuth2Login()
+            .logout().logoutSuccessUrl(logoutSuccessUrl)
         return httpSecurity.build()
     }
 

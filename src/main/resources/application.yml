@@ -2,6 +2,9 @@ spring:
   config:
     activate:
       on-profile: local
+  web:
+    logout:
+      success-url: /logout
   datasource:
     url: jdbc:mysql://root:0000@localhost:3306/WRT?createDatabaseIfNotExist=true
   security:
@@ -28,6 +31,9 @@ spring:
   config:
     activate:
       on-profile: prod
+  web:
+    logout:
+      success-url: http://dbs4gu2mftt7h.cloudfront.net/
   datasource:
     url: jdbc:mysql://${RDS_USERNAME}:${RDS_PASSWORD}@${RDS_HOSTNAME}:${RDS_PORT}/${RDS_DB_NAME}?createDatabaseIfNotExist=true
   jpa:
@@ -48,6 +54,7 @@ spring:
               - profile
 server:
   port: 5000
+
 
 LEX_API_KEY : ${LEX_API_KEY}
 
